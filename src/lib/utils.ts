@@ -4,3 +4,38 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
+}
+
+export function formatDate(date: string | null | undefined): string {
+  if (!date) return '—'
+  return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+export function formatDateTime(date: string | null | undefined): string {
+  if (!date) return '—'
+  return new Date(date).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+}
+
+export function getStatusColor(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
+  switch (status) {
+    case 'active': case 'received': return 'default'
+    case 'inactive': case 'cancelled': return 'destructive'
+    case 'discontinued': case 'draft': return 'outline'
+    case 'sent': case 'partial': return 'secondary'
+    default: return 'secondary'
+  }
+}
+
+export function calculateStockStatus(quantity: number, reorderPoint: number): 'critical' | 'low' | 'normal' | 'overstock' {
+  if (quantity === 0) return 'critical'
+  if (quantity <= reorderPoint) return 'low'
+  if (quantity > reorderPoint * 5) return 'overstock'
+  return 'normal'
+}
+
+export function generateSKU(): string {
+  return 'SKU-' + Math.random().toString(36).substring(2, 8).toUpperCase()
+}

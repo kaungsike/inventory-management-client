@@ -1,19 +1,15 @@
-import { createBrowserRouter } from "react-router-dom"
-import MainLayout from "@/layout/MainLayout"
+import { createBrowserRouter, Navigate } from "react-router-dom"
 import ErrorPage from "@/public/pages/ErrorPage"
-import Home from "@/public/pages/Home"
 import authRoute from "./authRoute"
 import studentRoute from "./studentRoute"
+import inventoryRoute from "./inventoryRoute"
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
-    errorElement: <ErrorPage />,
-    children: [
-      { index: true, element: <Home /> },
-    ],
+    element: <Navigate to="/dashboard" replace />,
   },
+  ...inventoryRoute,
   ...authRoute,
   ...studentRoute,
   { path: "*", element: <ErrorPage /> },
