@@ -1,13 +1,14 @@
 import { Link, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Tag, Users, Archive,
-  ArrowLeftRight, FileText, ShoppingCart, AlertTriangle, ChevronLeft, ChevronRight, X
+  ArrowLeftRight, FileText, ShoppingCart, AlertTriangle, ChevronLeft, ChevronRight, X, ShieldCheck
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLowStockInventory } from '@/hooks/useInventory'
 import { useAppStore } from '@/store/useAppStore'
+import { useAuth } from '@/hooks/useAuth'
 
 const navGroups = [
   {
@@ -46,6 +47,13 @@ const navGroups = [
   },
 ]
 
+const adminNavGroup = {
+  label: 'Administration',
+  items: [
+    { label: 'User Management', to: '/users', icon: ShieldCheck },
+  ],
+}
+
 interface SidebarProps {
   mobile?: boolean
   onClose?: () => void
@@ -54,10 +62,13 @@ interface SidebarProps {
 export function Sidebar({ mobile, onClose }: SidebarProps) {
   const location = useLocation()
   const { sidebarOpen, toggleSidebar } = useAppStore()
+  const { isAdmin } = useAuth()
   const { data: lowStockItems } = useLowStockInventory()
   const lowStockCount = lowStockItems?.length ?? 0
 
   const collapsed = !mobile && !sidebarOpen
+
+  const displayNavGroups = isAdmin ? [...navGroups, adminNavGroup] : navGroups
 
   return (
     <aside
@@ -84,7 +95,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-4">
-        {navGroups.map((group) => (
+        {displayNavGroups.map((group) => (
           <div key={group.label}>
             {!collapsed && (
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-2 mb-1">

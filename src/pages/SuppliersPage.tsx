@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { RoleGuard } from '@/components/auth/RoleGuard'
 import type { Supplier } from '@/lib/types'
 
 interface SupplierFormData {
@@ -136,17 +137,21 @@ export default function SuppliersPage() {
       header: 'Actions',
       cell: ({ row }) => (
         <div className="flex gap-1">
-          <Button variant="ghost" size="sm" onClick={() => setEditingSupplier(row.original)}>
-            <Edit2 className="size-3" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setDeleteTarget(row.original)}
-            className="text-destructive"
-          >
-            <Trash2 className="size-3" />
-          </Button>
+          <RoleGuard roles={['admin', 'manager']}>
+            <Button variant="ghost" size="sm" onClick={() => setEditingSupplier(row.original)}>
+              <Edit2 className="size-3" />
+            </Button>
+          </RoleGuard>
+          <RoleGuard roles={['admin']}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setDeleteTarget(row.original)}
+              className="text-destructive"
+            >
+              <Trash2 className="size-3" />
+            </Button>
+          </RoleGuard>
         </div>
       ),
     },
@@ -158,10 +163,12 @@ export default function SuppliersPage() {
         title="Suppliers"
         description="Manage your suppliers"
         action={
-          <Button onClick={() => setShowCreate(true)}>
-            <Plus className="size-4 mr-2" />
-            Add Supplier
-          </Button>
+          <RoleGuard roles={['admin', 'manager']}>
+            <Button onClick={() => setShowCreate(true)}>
+              <Plus className="size-4 mr-2" />
+              Add Supplier
+            </Button>
+          </RoleGuard>
         }
       />
 

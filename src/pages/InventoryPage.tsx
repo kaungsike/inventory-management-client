@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
+import { RoleGuard } from '@/components/auth/RoleGuard'
 import { calculateStockStatus } from '@/lib/utils'
 import type { Inventory } from '@/lib/types'
 
@@ -73,12 +74,14 @@ export default function InventoryPage() {
     {
       id: 'actions', header: 'Actions',
       cell: ({ row }) => (
-        <Button variant="outline" size="sm" onClick={() => {
-          setAdjustTarget(row.original)
-          reset({ quantity: String(row.original.quantity), reason: '' })
-        }}>
-          Adjust
-        </Button>
+        <RoleGuard roles={['admin', 'manager']}>
+          <Button variant="outline" size="sm" onClick={() => {
+            setAdjustTarget(row.original)
+            reset({ quantity: String(row.original.quantity), reason: '' })
+          }}>
+            Adjust
+          </Button>
+        </RoleGuard>
       ),
     },
   ]
@@ -95,7 +98,7 @@ export default function InventoryPage() {
         }
       />
 
-      {/* Adjust Modal */}
+      {/* Adjust Modal (admin + manager only) */}
       {adjustTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/50" onClick={() => setAdjustTarget(null)} />

@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardAction } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { RoleGuard } from '@/components/auth/RoleGuard'
 import type { Warehouse } from '@/lib/types'
 
 interface WarehouseFormData {
@@ -102,10 +103,12 @@ export default function WarehousesPage() {
         title="Warehouses"
         description="Manage warehouse locations"
         action={
-          <Button onClick={() => setShowCreate(true)}>
-            <Plus className="size-4 mr-2" />
-            Add Warehouse
-          </Button>
+          <RoleGuard roles={['admin', 'manager']}>
+            <Button onClick={() => setShowCreate(true)}>
+              <Plus className="size-4 mr-2" />
+              Add Warehouse
+            </Button>
+          </RoleGuard>
         }
       />
 
@@ -171,17 +174,21 @@ export default function WarehousesPage() {
                     <p>{warehouse.inventory_count ?? 0} product types</p>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setEditingWarehouse(warehouse)}>
-                      <Edit2 className="size-3 mr-1" /> Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setDeleteTarget(warehouse)}
-                      className="text-destructive"
-                    >
-                      <Trash2 className="size-3 mr-1" /> Delete
-                    </Button>
+                    <RoleGuard roles={['admin', 'manager']}>
+                      <Button variant="outline" size="sm" onClick={() => setEditingWarehouse(warehouse)}>
+                        <Edit2 className="size-3 mr-1" /> Edit
+                      </Button>
+                    </RoleGuard>
+                    <RoleGuard roles={['admin']}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setDeleteTarget(warehouse)}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="size-3 mr-1" /> Delete
+                      </Button>
+                    </RoleGuard>
                   </div>
                 </CardContent>
               </Card>

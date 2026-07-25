@@ -12,6 +12,7 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { EmptyState } from '@/components/common/EmptyState'
 import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { RoleGuard } from '@/components/auth/RoleGuard'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { PurchaseOrder } from '@/lib/types'
 
@@ -46,9 +47,11 @@ export default function PurchaseOrdersPage() {
           <Link to={`/purchase-orders/${row.original.id}`}>
             <Button variant="ghost" size="sm"><Eye className="size-3" /></Button>
           </Link>
-          <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(row.original)} className="text-destructive">
-            <Trash2 className="size-3" />
-          </Button>
+          <RoleGuard roles={['admin']}>
+            <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(row.original)} className="text-destructive">
+              <Trash2 className="size-3" />
+            </Button>
+          </RoleGuard>
         </div>
       ),
     },
@@ -57,7 +60,11 @@ export default function PurchaseOrdersPage() {
   return (
     <div className="space-y-6">
       <PageHeader title="Purchase Orders" description="Manage supplier purchase orders"
-        action={<Link to="/purchase-orders/new"><Button><Plus className="size-4 mr-2" />New PO</Button></Link>}
+        action={
+          <RoleGuard roles={['admin', 'manager']}>
+            <Link to="/purchase-orders/new"><Button><Plus className="size-4 mr-2" />New PO</Button></Link>
+          </RoleGuard>
+        }
       />
 
       <div className="flex flex-wrap gap-3">

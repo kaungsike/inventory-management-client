@@ -14,6 +14,7 @@ import { DataTable, TablePagination } from '@/components/common/DataTable'
 import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
+import { RoleGuard } from '@/components/auth/RoleGuard'
 import { formatCurrency, calculateStockStatus } from '@/lib/utils'
 import type { Product } from '@/lib/types'
 
@@ -81,12 +82,16 @@ export default function ProductsPage() {
       header: 'Actions',
       cell: ({ row }) => (
         <div className="flex gap-1">
-          <Link to={`/products/${row.original.id}/edit`}>
-            <Button variant="ghost" size="sm"><Edit2 className="size-3" /></Button>
-          </Link>
-          <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(row.original)} className="text-destructive">
-            <Trash2 className="size-3" />
-          </Button>
+          <RoleGuard roles={['admin', 'manager']}>
+            <Link to={`/products/${row.original.id}/edit`}>
+              <Button variant="ghost" size="sm"><Edit2 className="size-3" /></Button>
+            </Link>
+          </RoleGuard>
+          <RoleGuard roles={['admin']}>
+            <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(row.original)} className="text-destructive">
+              <Trash2 className="size-3" />
+            </Button>
+          </RoleGuard>
         </div>
       ),
     },
@@ -98,9 +103,11 @@ export default function ProductsPage() {
         title="Products"
         description="Manage your product catalog"
         action={
-          <Link to="/products/new">
-            <Button><Plus className="size-4 mr-2" />Add Product</Button>
-          </Link>
+          <RoleGuard roles={['admin', 'manager']}>
+            <Link to="/products/new">
+              <Button><Plus className="size-4 mr-2" />Add Product</Button>
+            </Link>
+          </RoleGuard>
         }
       />
 

@@ -14,6 +14,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Separator } from '@/components/ui/separator'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { useAllWarehouses } from '@/hooks/useWarehouses'
+import { RoleGuard } from '@/components/auth/RoleGuard'
 
 interface ReceiveFormData {
   warehouse_id: string
@@ -115,72 +116,76 @@ export default function PurchaseOrderDetailPage() {
         </CardContent>
       </Card>
 
-      {/* Status Update */}
-      <Card>
-        <CardHeader><CardTitle>Update Status</CardTitle></CardHeader>
-        <CardContent className="flex gap-2">
-          {['draft', 'sent', 'cancelled'].map(s => (
-            <Button key={s} variant="outline" size="sm" disabled={po.status === s || updateStatus.isPending}
-              onClick={() => updateStatus.mutateAsync({ id: po.id, status: s })}>
-              Mark {s.charAt(0).toUpperCase() + s.slice(1)}
-            </Button>
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Receive Items */}
-      {canReceive && (
+      {/* Status Update — admin + manager only */}
+      <RoleGuard roles={['admin', 'manager']}>
         <Card>
-          <CardHeader><CardTitle className="flex items-center gap-2"><CheckCircle className="size-4" />Receive Items</CardTitle></CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit(onReceive)} className="space-y-4">
-              <div>
-                <Label>Receiving Warehouse *</Label>
-                <Controller
-                  name="warehouse_id" control={control}
-                  rules={{ required: 'Warehouse is required' }}
-                  render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="w-full max-w-xs mt-1"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {warehouses.map(w => <SelectItem key={w.id} value={String(w.id)}>{w.name}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-              </div>
-              <div className="space-y-3">
-                {fields.map((field, index) => {
-                  const poItem = po.items?.[index]
-                  const remaining = (poItem?.quantity_ordered ?? 0) - (poItem?.quantity_received ?? 0)
-                  return (
-                    <div key={field.id} className="flex items-center gap-3">
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{poItem?.product?.name}</p>
-                        <p className="text-xs text-muted-foreground">Remaining: {remaining}</p>
-                      </div>
-                      <div className="w-24">
-                        <Input
-                          type="number"
-                          {...register(`items.${index}.quantity_received`, {
-                            min: { value: 0, message: 'Min 0' },
-                            max: { value: remaining, message: `Max ${remaining}` },
-                          })}
-                        />
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-              <div className="flex justify-end">
-                <Button type="submit" disabled={receive.isPending}>
-                  <CheckCircle className="size-4 mr-2" />
-                  {receive.isPending ? 'Processing...' : 'Receive Items'}
-                </Button>
-              </div>
-            </form>
+          <CardHeader><CardTitle>Update Status</CardTitle></CardHeader>
+          <CardContent className="flex gap-2">
+            {['draft', 'sent', 'cancelled'].map(s => (
+              <Button key={s} variant="outline" size="sm" disabled={po.status === s || updateStatus.isPending}
+                onClick={() => updateStatus.mutateAsync({ id: po.id, status: s })}>
+                Mark {s.charAt(0).toUpperCase() + s.slice(1)}
+              </Button>
+            ))}
           </CardContent>
         </Card>
+      </RoleGuard>
+
+      {/* Receive Items — admin + manager only */}
+      {canReceive && (
+        <RoleGuard roles={['admin', 'manager']}>
+          <Card>
+            <CardHeader><CardTitle className="flex items-center gap-2"><CheckCircle className="size-4" />Receive Items</CardTitle></CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit(onReceive)} className="space-y-4">
+                <div>
+                  <Label>Receiving Warehouse *</Label>
+                  <Controller
+                    name="warehouse_id" control={control}
+                    rules={{ required: 'Warehouse is required' }}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger className="w-full max-w-xs mt-1"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {warehouses.map(w => <SelectItem key={w.id} value={String(w.id)}>{w.name}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
+                <div className="space-y-3">
+                  {fields.map((field, index) => {
+                    const poItem = po.items?.[index]
+                    const remaining = (poItem?.quantity_ordered ?? 0) - (poItem?.quantity_received ?? 0)
+                    return (
+                      <div key={field.id} className="flex items-center gap-3">
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">{poItem?.product?.name}</p>
+                          <p className="text-xs text-muted-foreground">Remaining: {remaining}</p>
+                        </div>
+                        <div className="w-24">
+                          <Input
+                            type="number"
+                            {...register(`items.${index}.quantity_received`, {
+                              min: { value: 0, message: 'Min 0' },
+                              max: { value: remaining, message: `Max ${remaining}` },
+                            })}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="flex justify-end">
+                  <Button type="submit" disabled={receive.isPending}>
+                    <CheckCircle className="size-4 mr-2" />
+                    {receive.isPending ? 'Processing...' : 'Receive Items'}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </RoleGuard>
       )}
     </div>
   )
