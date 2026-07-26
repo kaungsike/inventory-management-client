@@ -51,5 +51,10 @@ export function useCategoryMutation() {
     onSuccess: () => { toast.success('Category deleted'); invalidate() },
   })
 
-  return { create, update, remove }
+  const toggleStatus = useMutation({
+    mutationFn: (id: number) => inventoryApi.patch(`/categories/${id}/toggle-status`),
+    onSuccess: () => { toast.success('Category status updated'); invalidate() },
+  })
+
+  return { create, update, remove, toggleStatus }
 }

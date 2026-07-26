@@ -156,8 +156,22 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><UsersPage /></Suspense> },
-      { path: 'new', element: <Suspense fallback={<Fallback />}><UserFormPage /></Suspense> },
-      { path: ':id/edit', element: <Suspense fallback={<Fallback />}><UserFormPage /></Suspense> },
+      {
+        path: 'new',
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <Suspense fallback={<Fallback />}><UserFormPage /></Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: ':id/edit',
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <Suspense fallback={<Fallback />}><UserFormPage /></Suspense>
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]

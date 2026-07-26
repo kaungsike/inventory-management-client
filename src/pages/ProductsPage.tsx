@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { RoleGuard } from '@/components/auth/RoleGuard'
+import { useAuth } from '@/hooks/useAuth'
 import { formatCurrency, calculateStockStatus } from '@/lib/utils'
 import type { Product } from '@/lib/types'
 
@@ -35,6 +36,9 @@ export default function ProductsPage() {
   const [status, setStatus] = useState<string>('')
   const [page, setPage] = useState(1)
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
+
+  const { isAdmin, isManager } = useAuth()
+  const showActionsColumn = isAdmin || isManager
 
   const { data, isLoading } = useProducts({
     search,
@@ -77,24 +81,28 @@ export default function ProductsPage() {
       header: 'Status',
       cell: ({ row }) => <StatusBadge status={row.original.status} />,
     },
-    {
-      id: 'actions',
-      header: 'Actions',
-      cell: ({ row }) => (
-        <div className="flex gap-1">
-          <RoleGuard roles={['admin', 'manager']}>
-            <Link to={`/products/${row.original.id}/edit`}>
-              <Button variant="ghost" size="sm"><Edit2 className="size-3" /></Button>
-            </Link>
-          </RoleGuard>
-          <RoleGuard roles={['admin']}>
-            <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(row.original)} className="text-destructive">
-              <Trash2 className="size-3" />
-            </Button>
-          </RoleGuard>
-        </div>
-      ),
-    },
+    ...(showActionsColumn
+      ? [
+          {
+            id: 'actions',
+            header: 'Actions',
+            cell: ({ row }: { row: { original: Product } }) => (
+              <div className="flex gap-1">
+                <RoleGuard roles={['admin', 'manager']}>
+                  <Link to={`/products/${row.original.id}/edit`}>
+                    <Button variant="ghost" size="sm"><Edit2 className="size-3" /></Button>
+                  </Link>
+                </RoleGuard>
+                <RoleGuard roles={['admin']}>
+                  <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(row.original)} className="text-destructive">
+                    <Trash2 className="size-3" />
+                  </Button>
+                </RoleGuard>
+              </div>
+            ),
+          } as ColumnDef<Product, unknown>,
+        ]
+      : []),
   ]
 
   return (

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { formatCurrency, formatDateTime } from '@/lib/utils'
+import { RoleGuard } from '@/components/auth/RoleGuard'
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444']
 
@@ -42,57 +43,63 @@ export default function DashboardPage() {
           iconClassName={stats?.low_stock_count ? 'bg-destructive/10' : undefined}
           className={stats?.low_stock_count ? 'border-destructive/30' : undefined}
         />
-        <StatsCard icon={TrendingUp} label="Inventory Value" value={formatCurrency(stats?.total_inventory_value ?? 0)} />
-        <StatsCard icon={Users} label="Active Suppliers" value={stats?.total_suppliers ?? 0} />
+        <RoleGuard roles={['admin', 'manager']}>
+          <StatsCard icon={TrendingUp} label="Inventory Value" value={formatCurrency(stats?.total_inventory_value ?? 0)} />
+        </RoleGuard>
+        <RoleGuard roles={['admin', 'manager']}>
+          <StatsCard icon={Users} label="Active Suppliers" value={stats?.total_suppliers ?? 0} />
+        </RoleGuard>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Monthly Bar Chart */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Monthly Transactions (Last 6 Months)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip />
-                <Bar dataKey="purchase" fill="#3b82f6" name="Purchase" radius={[2, 2, 0, 0]} />
-                <Bar dataKey="sale" fill="#10b981" name="Sale" radius={[2, 2, 0, 0]} />
-                <Bar dataKey="adjustment" fill="#f59e0b" name="Adjustment" radius={[2, 2, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+      <RoleGuard roles={['admin', 'manager']}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Monthly Bar Chart */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Monthly Transactions (Last 6 Months)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={monthlyData}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                  <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                  <YAxis tick={{ fontSize: 12 }} />
+                  <Tooltip />
+                  <Bar dataKey="purchase" fill="#3b82f6" name="Purchase" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="sale" fill="#10b981" name="Sale" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="adjustment" fill="#f59e0b" name="Adjustment" radius={[2, 2, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
 
-        {/* Top Products */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Top Products by Value</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {stats?.top_products_by_value?.map((p, i) => (
-                <div key={p.id} className="flex items-center gap-3">
-                  <div
-                    className="size-6 rounded-full flex items-center justify-center text-xs font-bold"
-                    style={{ backgroundColor: COLORS[i] + '20', color: COLORS[i] }}
-                  >
-                    {i + 1}
+          {/* Top Products */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Top Products by Value</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {stats?.top_products_by_value?.map((p, i) => (
+                  <div key={p.id} className="flex items-center gap-3">
+                    <div
+                      className="size-6 rounded-full flex items-center justify-center text-xs font-bold"
+                      style={{ backgroundColor: COLORS[i] + '20', color: COLORS[i] }}
+                    >
+                      {i + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{p.name}</p>
+                      <p className="text-xs text-muted-foreground">{p.sku}</p>
+                    </div>
+                    <span className="text-sm font-medium">{formatCurrency(p.total_value)}</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{p.name}</p>
-                    <p className="text-xs text-muted-foreground">{p.sku}</p>
-                  </div>
-                  <span className="text-sm font-medium">{formatCurrency(p.total_value)}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </RoleGuard>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Transactions */}

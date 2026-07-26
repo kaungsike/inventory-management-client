@@ -17,6 +17,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { RoleGuard } from '@/components/auth/RoleGuard'
+import { useAuth } from '@/hooks/useAuth'
 import type { Supplier } from '@/lib/types'
 
 interface SupplierFormData {
@@ -110,6 +111,9 @@ export default function SuppliersPage() {
   const [showCreate, setShowCreate] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Supplier | null>(null)
 
+  const { isAdmin, isManager } = useAuth()
+  const showActionsColumn = isAdmin || isManager
+
   const { data, isLoading } = useSuppliers({ search, page })
   const { create, update, remove } = useSupplierMutation()
 
@@ -132,29 +136,33 @@ export default function SuppliersPage() {
       header: 'Status',
       cell: ({ row }) => <StatusBadge status={row.original.status} />,
     },
-    {
-      id: 'actions',
-      header: 'Actions',
-      cell: ({ row }) => (
-        <div className="flex gap-1">
-          <RoleGuard roles={['admin', 'manager']}>
-            <Button variant="ghost" size="sm" onClick={() => setEditingSupplier(row.original)}>
-              <Edit2 className="size-3" />
-            </Button>
-          </RoleGuard>
-          <RoleGuard roles={['admin']}>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setDeleteTarget(row.original)}
-              className="text-destructive"
-            >
-              <Trash2 className="size-3" />
-            </Button>
-          </RoleGuard>
-        </div>
-      ),
-    },
+    ...(showActionsColumn
+      ? [
+          {
+            id: 'actions',
+            header: 'Actions',
+            cell: ({ row }: { row: { original: Supplier } }) => (
+              <div className="flex gap-1">
+                <RoleGuard roles={['admin', 'manager']}>
+                  <Button variant="ghost" size="sm" onClick={() => setEditingSupplier(row.original)}>
+                    <Edit2 className="size-3" />
+                  </Button>
+                </RoleGuard>
+                <RoleGuard roles={['admin']}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setDeleteTarget(row.original)}
+                    className="text-destructive"
+                  >
+                    <Trash2 className="size-3" />
+                  </Button>
+                </RoleGuard>
+              </div>
+            ),
+          } as ColumnDef<Supplier, unknown>,
+        ]
+      : []),
   ]
 
   return (

@@ -82,7 +82,7 @@ export default function CategoriesPage() {
   const [deleteTarget, setDeleteTarget] = useState<Category | null>(null)
 
   const { data, isLoading } = useCategories({ search, page })
-  const { create, update, remove } = useCategoryMutation()
+  const { create, update, remove, toggleStatus } = useCategoryMutation()
 
   const handleCreate = async (formData: CategoryFormData) => {
     await create.mutateAsync(formData)
@@ -187,10 +187,20 @@ export default function CategoriesPage() {
                   <p className="text-xs text-muted-foreground mb-3">
                     {category.products_count ?? 0} products
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <RoleGuard roles={['admin', 'manager']}>
                       <Button variant="outline" size="sm" onClick={() => setEditingCategory(category)}>
                         <Edit2 className="size-3 mr-1" /> Edit
+                      </Button>
+                    </RoleGuard>
+                    <RoleGuard roles={['admin', 'manager']}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => toggleStatus.mutate(category.id)}
+                        disabled={toggleStatus.isPending}
+                      >
+                        {category.status === 'active' ? 'Set Inactive' : 'Set Active'}
                       </Button>
                     </RoleGuard>
                     <RoleGuard roles={['admin']}>

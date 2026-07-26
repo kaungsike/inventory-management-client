@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { RoleGuard } from '@/components/auth/RoleGuard'
+import { useAuth } from '@/hooks/useAuth'
 import { calculateStockStatus } from '@/lib/utils'
 import type { Inventory } from '@/lib/types'
 
@@ -31,6 +32,9 @@ export default function InventoryPage() {
   const [stockFilter, setStockFilter] = useState('')
   const [page, setPage] = useState(1)
   const [adjustTarget, setAdjustTarget] = useState<Inventory | null>(null)
+
+  const { isAdmin, isManager } = useAuth()
+  const showActionsColumn = isAdmin || isManager
 
   const { data, isLoading } = useInventory({
     warehouse_id: warehouseId ? Number(warehouseId) : undefined,
@@ -71,19 +75,23 @@ export default function InventoryPage() {
       id: 'stock_status', header: 'Status',
       cell: ({ row }) => <StockBadge qty={row.original.quantity} reorderPoint={row.original.reorder_point} />,
     },
-    {
-      id: 'actions', header: 'Actions',
-      cell: ({ row }) => (
-        <RoleGuard roles={['admin', 'manager']}>
-          <Button variant="outline" size="sm" onClick={() => {
-            setAdjustTarget(row.original)
-            reset({ quantity: String(row.original.quantity), reason: '' })
-          }}>
-            Adjust
-          </Button>
-        </RoleGuard>
-      ),
-    },
+    ...(showActionsColumn
+      ? [
+          {
+            id: 'actions', header: 'Actions',
+            cell: ({ row }: { row: { original: Inventory } }) => (
+              <RoleGuard roles={['admin', 'manager']}>
+                <Button variant="outline" size="sm" onClick={() => {
+                  setAdjustTarget(row.original)
+                  reset({ quantity: String(row.original.quantity), reason: '' })
+                }}>
+                  Adjust
+                </Button>
+              </RoleGuard>
+            ),
+          } as ColumnDef<Inventory, unknown>,
+        ]
+      : []),
   ]
 
   return (
