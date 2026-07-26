@@ -49,6 +49,7 @@ export default function PurchaseOrderFormPage() {
   const onSubmit = async (data: POFormData) => {
     await create.mutateAsync({
       supplier_id: Number(data.supplier_id),
+      warehouse_id: data.warehouse_id ? Number(data.warehouse_id) : null,
       order_date: data.order_date,
       expected_date: data.expected_date || null,
       notes: data.notes || null,

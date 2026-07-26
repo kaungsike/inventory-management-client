@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -108,17 +109,19 @@ export function TopBar({ onMenuClick }: TopBarProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user.name}</p>
-                    <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
-                    <div className="pt-1">
-                      <Badge variant={getRoleBadgeVariant(user.role)} className="capitalize text-[10px]">
-                        Role: {user.role}
-                      </Badge>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{user.name}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                      <div className="pt-1">
+                        <Badge variant={getRoleBadgeVariant(user.role)} className="capitalize text-[10px]">
+                          Role: {user.role}
+                        </Badge>
+                      </div>
                     </div>
-                  </div>
-                </DropdownMenuLabel>
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setShowProfileModal(true)} className="cursor-pointer">
                   <UserIcon className="mr-2 size-4" />

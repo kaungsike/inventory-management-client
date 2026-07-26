@@ -20,7 +20,7 @@ export function useProduct(id: number | null) {
     queryKey: ['products', id],
     queryFn: async () => {
       const { data } = await inventoryApi.get(`/products/${id}`)
-      return data
+      return data.data ?? data
     },
     enabled: !!id,
   })

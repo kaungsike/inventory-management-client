@@ -20,7 +20,7 @@ export function usePurchaseOrder(id: number | null) {
     queryKey: ['purchase-orders', id],
     queryFn: async () => {
       const { data } = await inventoryApi.get(`/purchase-orders/${id}`)
-      return data
+      return data.data ?? data
     },
     enabled: !!id,
   })
@@ -47,8 +47,8 @@ export function usePurchaseOrderMutation() {
   })
 
   const receive = useMutation({
-    mutationFn: ({ id, items }: { id: number; items: { id: number; quantity_received: number }[] }) =>
-      inventoryApi.post(`/purchase-orders/${id}/receive`, { items }),
+    mutationFn: ({ id, warehouse_id, items }: { id: number; warehouse_id?: number; items: { id: number; quantity_received: number }[] }) =>
+      inventoryApi.post(`/purchase-orders/${id}/receive`, { warehouse_id, items }),
     onSuccess: () => {
       toast.success('Items received')
       invalidate()

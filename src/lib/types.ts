@@ -98,6 +98,7 @@ export interface PurchaseOrderItem {
 export interface PurchaseOrder {
   id: number
   supplier_id: number
+  warehouse_id?: number | null
   user_id: number | null
   po_number: string
   status: 'draft' | 'sent' | 'partial' | 'received' | 'cancelled'
@@ -107,6 +108,7 @@ export interface PurchaseOrder {
   total_amount: number
   notes: string | null
   supplier?: Supplier
+  warehouse?: Warehouse
   items?: PurchaseOrderItem[]
   items_count?: number
   created_at: string

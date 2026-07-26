@@ -104,8 +104,18 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
             )}
             <ul className="space-y-0.5">
               {group.items.map((item) => {
-                const isActive = location.pathname === item.to ||
-                  (item.to !== '/dashboard' && location.pathname.startsWith(item.to))
+                // Find all matching items and select the longest matching path prefix
+                const allItems = displayNavGroups.flatMap((g) => g.items)
+                const matchingItems = allItems.filter(
+                  (i) =>
+                    location.pathname === i.to ||
+                    (i.to !== '/dashboard' && location.pathname.startsWith(i.to + '/'))
+                )
+                const bestMatch = matchingItems.reduce<typeof item | null>(
+                  (prev, curr) => (!prev || curr.to.length > prev.to.length ? curr : prev),
+                  null
+                )
+                const isActive = bestMatch?.to === item.to
                 const isLowStock = item.to === '/low-stock'
 
                 return (
@@ -116,7 +126,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
                       className={cn(
                         'flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm transition-colors',
                         isActive
-                          ? 'bg-primary text-primary-foreground'
+                          ? 'bg-primary text-primary-foreground font-medium'
                           : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                         collapsed && 'justify-center px-0'
                       )}
