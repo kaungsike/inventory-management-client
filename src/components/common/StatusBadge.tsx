@@ -15,6 +15,8 @@ const STATUS_LABELS: Record<string, string> = {
   partial: 'Partial',
   received: 'Received',
   cancelled: 'Cancelled',
+  confirmed: 'Confirmed',
+  shipped: 'Shipped',
   purchase: 'Purchase',
   sale: 'Sale',
   transfer: 'Transfer',

@@ -30,6 +30,7 @@ export interface Product {
   description: string | null
   unit_price: number
   cost_price: number
+  average_cost: number
   unit: string
   image: string | null
   status: 'active' | 'inactive' | 'discontinued'
@@ -96,6 +97,48 @@ export interface PurchaseOrderItem {
   unit_cost: number
   total_cost: number
   product?: Product
+}
+
+export interface Customer {
+  id: number
+  name: string
+  email: string | null
+  phone: string | null
+  address: string | null
+  status: 'active' | 'inactive'
+  created_at: string
+  updated_at: string
+}
+
+export interface SalesOrderItem {
+  id: number
+  sales_order_id: number
+  product_id: number
+  quantity_ordered: number
+  quantity_shipped: number
+  unit_price: number
+  unit_cost: number | null
+  total_amount: number
+  product?: Product
+}
+
+export interface SalesOrder {
+  id: number
+  customer_id: number
+  warehouse_id: number
+  user_id: number | null
+  so_number: string
+  status: 'draft' | 'confirmed' | 'shipped' | 'cancelled'
+  order_date: string
+  ship_date: string | null
+  total_amount: number
+  notes: string | null
+  customer?: Customer
+  warehouse?: Warehouse
+  items?: SalesOrderItem[]
+  items_count?: number
+  created_at: string
+  updated_at: string
 }
 
 export interface PurchaseOrder {

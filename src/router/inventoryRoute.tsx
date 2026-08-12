@@ -15,6 +15,10 @@ const TransactionsPage = lazy(() => import('@/pages/TransactionsPage'))
 const PurchaseOrdersPage = lazy(() => import('@/pages/PurchaseOrdersPage'))
 const PurchaseOrderFormPage = lazy(() => import('@/pages/PurchaseOrderFormPage'))
 const PurchaseOrderDetailPage = lazy(() => import('@/pages/PurchaseOrderDetailPage'))
+const CustomersPage = lazy(() => import('@/pages/CustomersPage'))
+const SalesOrdersPage = lazy(() => import('@/pages/SalesOrdersPage'))
+const SalesOrderFormPage = lazy(() => import('@/pages/SalesOrderFormPage'))
+const SalesOrderDetailPage = lazy(() => import('@/pages/SalesOrderDetailPage'))
 const LowStockAlertPage = lazy(() => import('@/pages/LowStockAlertPage'))
 const UsersPage = lazy(() => import('@/pages/users/UsersPage'))
 const UserFormPage = lazy(() => import('@/pages/users/UserFormPage'))
@@ -134,6 +138,37 @@ const inventoryRoute = [
         ),
       },
       { path: ':id', element: <Suspense fallback={<Fallback />}><PurchaseOrderDetailPage /></Suspense> },
+    ],
+  },
+  {
+    path: '/customers',
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <Suspense fallback={<Fallback />}><CustomersPage /></Suspense> },
+    ],
+  },
+  {
+    path: '/sales-orders',
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <Suspense fallback={<Fallback />}><SalesOrdersPage /></Suspense> },
+      {
+        path: 'new',
+        element: (
+          <ProtectedRoute allowedRoles={['admin', 'manager']}>
+            <Suspense fallback={<Fallback />}><SalesOrderFormPage /></Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      { path: ':id', element: <Suspense fallback={<Fallback />}><SalesOrderDetailPage /></Suspense> },
     ],
   },
   {
