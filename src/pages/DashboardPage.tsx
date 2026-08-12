@@ -112,7 +112,7 @@ export default function DashboardPage() {
               {stats?.recent_transactions?.slice(0, 8).map((tx) => (
                 <div key={tx.id} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
                   <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">{tx.product?.name ?? `Product #${tx.product_id}`}</p>
+                    <p className="text-sm font-medium truncate">{tx.product_name ?? `Product #${tx.product_id}`}</p>
                     <p className="text-xs text-muted-foreground">{formatDateTime(tx.transaction_date)}</p>
                   </div>
                   <div className="flex items-center gap-2 ml-2">

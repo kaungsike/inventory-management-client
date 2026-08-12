@@ -71,11 +71,14 @@ export interface Inventory {
 export interface InventoryTransaction {
   id: number
   product_id: number
+  product_name: string | null
+  product_sku: string | null
   warehouse_id: number
   user_id: number | null
   type: 'purchase' | 'sale' | 'transfer' | 'adjustment' | 'return'
   quantity: number
   unit_cost: number | null
+  unit_price: number | null
   reference_number: string | null
   notes: string | null
   transaction_date: string

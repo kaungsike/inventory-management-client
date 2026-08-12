@@ -38,8 +38,8 @@ export default function TransactionsPage() {
       ...rows.map(tx => [
         formatDateTime(tx.transaction_date),
         tx.reference_number ?? '',
-        tx.product?.name ?? '',
-        tx.product?.sku ?? '',
+        tx.product_name ?? '',
+        tx.product_sku ?? '',
         tx.warehouse?.name ?? '',
         tx.type,
         tx.quantity,
@@ -61,8 +61,8 @@ export default function TransactionsPage() {
     )},
     { accessorKey: 'product', header: 'Product', cell: ({ row }) => (
       <div>
-        <p className="font-medium text-sm">{row.original.product?.name ?? '—'}</p>
-        <p className="text-xs text-muted-foreground font-mono">{row.original.product?.sku}</p>
+        <p className="font-medium text-sm">{row.original.product_name ?? '—'}</p>
+        <p className="text-xs text-muted-foreground font-mono">{row.original.product_sku ?? ''}</p>
       </div>
     )},
     { accessorKey: 'warehouse', header: 'Warehouse', cell: ({ row }) => row.original.warehouse?.name ?? '—' },
