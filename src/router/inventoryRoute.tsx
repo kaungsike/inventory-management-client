@@ -20,6 +20,7 @@ const SalesOrdersPage = lazy(() => import('@/pages/SalesOrdersPage'))
 const SalesOrderFormPage = lazy(() => import('@/pages/SalesOrderFormPage'))
 const SalesOrderDetailPage = lazy(() => import('@/pages/SalesOrderDetailPage'))
 const LowStockAlertPage = lazy(() => import('@/pages/LowStockAlertPage'))
+const ActivityLogPage = lazy(() => import('@/pages/ActivityLogPage'))
 const SalesReportPage = lazy(() => import('@/pages/reports/SalesReportPage'))
 const ProfitReportPage = lazy(() => import('@/pages/reports/ProfitReportPage'))
 const InventoryValuationPage = lazy(() => import('@/pages/reports/InventoryValuationPage'))
@@ -183,6 +184,17 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><LowStockAlertPage /></Suspense> },
+    ],
+  },
+  {
+    path: '/activity-logs',
+    element: (
+      <ProtectedRoute allowedRoles={['admin', 'manager']}>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <Suspense fallback={<Fallback />}><ActivityLogPage /></Suspense> },
     ],
   },
   {

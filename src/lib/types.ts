@@ -291,3 +291,29 @@ export interface ApiResponse<T> {
   data: T
   message?: string
 }
+
+export interface ActivityLog {
+  id: number
+  action: string
+  description: string | null
+  user: { id: number; name: string } | null
+  model_type: string
+  model_id: number | null
+  old_values: Record<string, unknown> | null
+  new_values: Record<string, unknown> | null
+  ip_address: string | null
+  user_agent: string | null
+  created_at: string
+}
+
+export interface ActivityLogFilters {
+  user_id?: number
+  action?: string
+  model_type?: string
+  model_id?: number
+  date_from?: string
+  date_to?: string
+  search?: string
+  page?: number
+  per_page?: number
+}
