@@ -171,6 +171,102 @@ export interface DashboardStats {
   recent_transactions: InventoryTransaction[]
   top_products_by_value: { id: number; name: string; sku: string; total_value: number; total_stock: number }[]
   monthly_transaction_summary: { month: string; type: string; count: number; total_quantity: number }[]
+  today_financial?: FinancialSummary
+  month_financial?: FinancialSummary
+  last_30_days_sales?: DailySalesRow[]
+  monthly_financial_summary?: MonthlySalesRow[]
+}
+
+export interface FinancialSummary {
+  revenue: number
+  cogs: number
+  gross_profit: number
+  gross_margin: number
+  sales_count: number
+  units_sold: number
+  average_order_value: number
+}
+
+export interface DailySalesRow {
+  date: string
+  revenue: number
+  cogs: number
+  gross_profit: number
+  gross_margin: number
+  sales_count: number
+  units_sold: number
+}
+
+export interface MonthlySalesRow {
+  month: string
+  year: number
+  month_number: number
+  revenue: number
+  cogs: number
+  gross_profit: number
+  gross_margin: number
+  sales_count: number
+  units_sold: number
+}
+
+export interface SalesReportRow {
+  id: number
+  transaction_date: string
+  product_id: number
+  product_name: string | null
+  product_sku: string | null
+  warehouse_id: number
+  warehouse_name: string | null
+  reference_number: string | null
+  quantity: number
+  unit_price: number
+  unit_cost: number
+  revenue: number
+  cogs: number
+  gross_profit: number
+}
+
+export interface SalesReport {
+  summary: FinancialSummary
+  data: SalesReportRow[]
+}
+
+export interface ProfitReport {
+  summary: FinancialSummary
+  daily: DailySalesRow[]
+  monthly: MonthlySalesRow[]
+}
+
+export interface InventoryValuationRow {
+  product_id: number
+  product_name: string
+  product_sku: string
+  warehouse_id: number
+  warehouse_name: string
+  quantity: number
+  average_cost: number
+  inventory_value: number
+}
+
+export interface InventoryValuationByWarehouse {
+  warehouse_id: number
+  warehouse_name: string
+  total_units: number
+  total_value: number
+}
+
+export interface InventoryValuation {
+  summary: { total_units: number; total_value: number }
+  by_warehouse: InventoryValuationByWarehouse[]
+  data: InventoryValuationRow[]
+}
+
+export interface ReportFilters {
+  date_from?: string
+  date_to?: string
+  warehouse_id?: number
+  product_id?: number
+  category_id?: number
 }
 
 export interface PaginatedResponse<T> {

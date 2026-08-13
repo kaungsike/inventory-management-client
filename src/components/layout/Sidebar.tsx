@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Tag, Users, Archive,
-  ArrowLeftRight, FileText, ShoppingCart, AlertTriangle, ChevronLeft, ChevronRight, X, ShieldCheck, UserRound, ShoppingBag
+  ArrowLeftRight, FileText, ShoppingCart, AlertTriangle, ChevronLeft, ChevronRight, X, ShieldCheck, UserRound, ShoppingBag, BarChart3, LineChart, Calculator
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -47,6 +47,14 @@ const navGroups = [
     ],
   },
   {
+    label: 'Reports',
+    items: [
+      { label: 'Sales Report', to: '/reports/sales', icon: BarChart3 },
+      { label: 'Profit Report', to: '/reports/profit', icon: LineChart },
+      { label: 'Inventory Valuation', to: '/reports/inventory-valuation', icon: Calculator },
+    ],
+  },
+  {
     label: 'Alerts',
     items: [
       { label: 'Low Stock Alerts', to: '/low-stock', icon: AlertTriangle },
@@ -69,13 +77,15 @@ interface SidebarProps {
 export function Sidebar({ mobile, onClose }: SidebarProps) {
   const location = useLocation()
   const { sidebarOpen, toggleSidebar } = useAppStore()
-  const { isAdmin } = useAuth()
+  const { isAdmin, isStaff } = useAuth()
   const { data: lowStockItems } = useLowStockInventory()
   const lowStockCount = lowStockItems?.length ?? 0
 
   const collapsed = !mobile && !sidebarOpen
 
-  const displayNavGroups = isAdmin ? [...navGroups, adminNavGroup] : navGroups
+  // Financial reports contain sensitive cost/profit data (admin & manager only).
+  const visibleNavGroups = isStaff ? navGroups.filter((group) => group.label !== 'Reports') : navGroups
+  const displayNavGroups = isAdmin ? [...visibleNavGroups, adminNavGroup] : visibleNavGroups
 
   return (
     <aside
