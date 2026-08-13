@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { ArrowLeftRight, Archive } from 'lucide-react'
+import { ArrowLeftRight, Archive, PackageX } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Link } from 'react-router-dom'
 import { useInventory, useInventoryAdjust } from '@/hooks/useInventory'
@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/common/PageHeader'
 import { DataTable, TablePagination } from '@/components/common/DataTable'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { EmptyState } from '@/components/common/EmptyState'
+import { WriteOffDialog } from '@/components/inventory/WriteOffDialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -32,6 +33,7 @@ export default function InventoryPage() {
   const [stockFilter, setStockFilter] = useState('')
   const [page, setPage] = useState(1)
   const [adjustTarget, setAdjustTarget] = useState<Inventory | null>(null)
+  const [writeOffTarget, setWriteOffTarget] = useState<Inventory | null>(null)
 
   const { isAdmin, isManager } = useAuth()
   const showActionsColumn = isAdmin || isManager
@@ -92,6 +94,19 @@ export default function InventoryPage() {
           } as ColumnDef<Inventory, unknown>,
         ]
       : []),
+    {
+      id: 'write_off', header: '',
+      cell: ({ row }) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-destructive hover:text-destructive"
+          onClick={() => setWriteOffTarget(row.original)}
+        >
+          <PackageX className="size-4 mr-1" />Write Off
+        </Button>
+      ),
+    },
   ]
 
   return (
@@ -141,6 +156,11 @@ export default function InventoryPage() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Write Off Modal (all roles) */}
+      {writeOffTarget && (
+        <WriteOffDialog inventory={writeOffTarget} onClose={() => setWriteOffTarget(null)} />
       )}
 
       {/* Filters */}

@@ -1,5 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { Package, AlertTriangle, TrendingUp, Users, CalendarDays, CalendarRange } from 'lucide-react'
+import { Package, AlertTriangle, TrendingUp, Users, CalendarDays, CalendarRange, PackageX } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useDashboardStats } from '@/hooks/useDashboard'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -105,6 +105,23 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <FinancialCard title="Today's Sales" icon={CalendarDays} data={stats?.today_financial} />
           <FinancialCard title="This Month's Sales" icon={CalendarRange} data={stats?.month_financial} />
+        </div>
+      </RoleGuard>
+
+      <RoleGuard roles={['admin', 'manager']}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <StatsCard
+            icon={PackageX}
+            label="Written Off Today"
+            value={formatCurrency(stats?.today_write_off ?? 0)}
+            iconClassName="bg-destructive/10"
+          />
+          <StatsCard
+            icon={PackageX}
+            label="Written Off This Month"
+            value={formatCurrency(stats?.month_write_off ?? 0)}
+            iconClassName="bg-destructive/10"
+          />
         </div>
       </RoleGuard>
 

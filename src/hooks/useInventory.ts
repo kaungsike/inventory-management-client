@@ -52,3 +52,19 @@ export function useInventoryAdjust() {
     },
   })
 }
+
+export function useInventoryWriteOff() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, type, quantity, reason }: { id: number; type: 'damage' | 'expired'; quantity: number; reason: string }) =>
+      inventoryApi.post(`/inventory/${id}/write-off`, { type, quantity, reason }),
+    onSuccess: () => {
+      toast.success('Stock written off')
+      queryClient.invalidateQueries({ queryKey: ['inventory'] })
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      queryClient.invalidateQueries({ queryKey: ['reports'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    },
+  })
+}

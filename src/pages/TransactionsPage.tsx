@@ -101,6 +101,8 @@ export default function TransactionsPage() {
             <SelectItem value="transfer">Transfer</SelectItem>
             <SelectItem value="adjustment">Adjustment</SelectItem>
             <SelectItem value="return">Return</SelectItem>
+            <SelectItem value="damage">Damage</SelectItem>
+            <SelectItem value="expired">Expired</SelectItem>
           </SelectContent>
         </Select>
         <Select value={warehouseId} onValueChange={(v) => { setWarehouseId(v ?? ''); setPage(1) }}>

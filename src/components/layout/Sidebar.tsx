@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Tag, Users, Archive,
-  ArrowLeftRight, FileText, ShoppingCart, AlertTriangle, ChevronLeft, ChevronRight, X, ShieldCheck, UserRound, ShoppingBag, BarChart3, LineChart, Calculator, FileClock
+  ArrowLeftRight, FileText, ShoppingCart, AlertTriangle, ChevronLeft, ChevronRight, X, ShieldCheck, UserRound, ShoppingBag, BarChart3, LineChart, Calculator, FileClock, PackageX
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -52,6 +52,7 @@ const navGroups = [
       { label: 'Sales Report', to: '/reports/sales', icon: BarChart3 },
       { label: 'Profit Report', to: '/reports/profit', icon: LineChart },
       { label: 'Inventory Valuation', to: '/reports/inventory-valuation', icon: Calculator },
+      { label: 'Stock Write-Off', to: '/reports/write-off', icon: PackageX },
     ],
   },
   {

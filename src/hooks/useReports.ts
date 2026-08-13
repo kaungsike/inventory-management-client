@@ -5,6 +5,8 @@ import type {
   ProfitReport,
   ReportFilters,
   SalesReport,
+  StockWriteOffReport,
+  WriteOffFilters,
 } from '@/lib/types'
 
 interface SalesFilters extends ReportFilters {
@@ -45,6 +47,16 @@ export function useInventoryValuation(filters: ValuationFilters = {}) {
     queryKey: ['reports', 'inventory-valuation', filters],
     queryFn: async () => {
       const { data } = await inventoryApi.get('/reports/inventory-valuation', { params: filters })
+      return data
+    },
+  })
+}
+
+export function useStockWriteOffReport(filters: WriteOffFilters = {}) {
+  return useQuery<StockWriteOffReport>({
+    queryKey: ['reports', 'write-off', filters],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/reports/write-off', { params: filters })
       return data
     },
   })

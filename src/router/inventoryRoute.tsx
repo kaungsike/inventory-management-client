@@ -24,6 +24,7 @@ const ActivityLogPage = lazy(() => import('@/pages/ActivityLogPage'))
 const SalesReportPage = lazy(() => import('@/pages/reports/SalesReportPage'))
 const ProfitReportPage = lazy(() => import('@/pages/reports/ProfitReportPage'))
 const InventoryValuationPage = lazy(() => import('@/pages/reports/InventoryValuationPage'))
+const StockWriteOffReportPage = lazy(() => import('@/pages/reports/StockWriteOffReportPage'))
 const UsersPage = lazy(() => import('@/pages/users/UsersPage'))
 const UserFormPage = lazy(() => import('@/pages/users/UserFormPage'))
 
@@ -228,6 +229,17 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><InventoryValuationPage /></Suspense> },
+    ],
+  },
+  {
+    path: '/reports/write-off',
+    element: (
+      <ProtectedRoute allowedRoles={['admin', 'manager']}>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <Suspense fallback={<Fallback />}><StockWriteOffReportPage /></Suspense> },
     ],
   },
   {

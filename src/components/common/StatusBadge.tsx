@@ -22,6 +22,8 @@ const STATUS_LABELS: Record<string, string> = {
   transfer: 'Transfer',
   adjustment: 'Adjustment',
   return: 'Return',
+  damage: 'Damage',
+  expired: 'Expired',
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {

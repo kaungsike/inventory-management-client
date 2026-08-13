@@ -76,7 +76,7 @@ export interface InventoryTransaction {
   product_sku: string | null
   warehouse_id: number
   user_id: number | null
-  type: 'purchase' | 'sale' | 'transfer' | 'adjustment' | 'return'
+  type: 'purchase' | 'sale' | 'transfer' | 'adjustment' | 'return' | 'damage' | 'expired'
   quantity: number
   unit_cost: number | null
   unit_price: number | null
@@ -173,6 +173,8 @@ export interface DashboardStats {
   monthly_transaction_summary: { month: string; type: string; count: number; total_quantity: number }[]
   today_financial?: FinancialSummary
   month_financial?: FinancialSummary
+  today_write_off?: number
+  month_write_off?: number
   last_30_days_sales?: DailySalesRow[]
   monthly_financial_summary?: MonthlySalesRow[]
 }
@@ -259,6 +261,40 @@ export interface InventoryValuation {
   summary: { total_units: number; total_value: number }
   by_warehouse: InventoryValuationByWarehouse[]
   data: InventoryValuationRow[]
+}
+
+export interface StockWriteOffRow {
+  id: number
+  transaction_date: string
+  product_id: number
+  product_name: string
+  product_sku: string
+  warehouse_id: number
+  warehouse_name: string | null
+  type: 'damage' | 'expired'
+  quantity: number
+  unit_cost: number
+  value: number
+  reason: string | null
+  user_id: number | null
+}
+
+export interface StockWriteOffSummary {
+  total_quantity: number
+  total_value: number
+  damage_quantity: number
+  damage_value: number
+  expired_quantity: number
+  expired_value: number
+}
+
+export interface StockWriteOffReport {
+  summary: StockWriteOffSummary
+  data: StockWriteOffRow[]
+}
+
+export interface WriteOffFilters extends ReportFilters {
+  type?: 'damage' | 'expired'
 }
 
 export interface ReportFilters {
