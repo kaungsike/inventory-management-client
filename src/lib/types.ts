@@ -181,36 +181,43 @@ export interface DashboardStats {
   monthly_financial_summary?: MonthlySalesRow[]
 }
 
-export interface FinancialSummary {
-  revenue: number
-  cogs: number
+export interface FinancialBreakdown {
+  gross_sales: number
+  return_value: number
+  net_sales: number
+  sales_cogs: number
+  returned_cogs: number
+  net_cogs: number
   gross_profit: number
   gross_margin: number
-  sales_count: number
+  gross_sales_count: number
+  completed_returns_count: number
+  net_sales_count: number
   units_sold: number
+  returned_units: number
+}
+
+export interface FinancialSummary extends FinancialBreakdown {
+  revenue: number
+  cogs: number
+  sales_count: number
   average_order_value: number
 }
 
-export interface DailySalesRow {
+export interface DailySalesRow extends FinancialBreakdown {
   date: string
   revenue: number
   cogs: number
-  gross_profit: number
-  gross_margin: number
   sales_count: number
-  units_sold: number
 }
 
-export interface MonthlySalesRow {
+export interface MonthlySalesRow extends FinancialBreakdown {
   month: string
   year: number
   month_number: number
   revenue: number
   cogs: number
-  gross_profit: number
-  gross_margin: number
   sales_count: number
-  units_sold: number
 }
 
 export interface SalesReportRow {
@@ -305,6 +312,7 @@ export interface ReportFilters {
   warehouse_id?: number
   product_id?: number
   category_id?: number
+  customer_id?: number
 }
 
 export interface PaginatedResponse<T> {
@@ -436,6 +444,7 @@ export interface ReturnReportSummary {
   total_returns: number
   total_units: number
   total_value: number
+  total_cogs: number
 }
 
 export interface ReturnReport {

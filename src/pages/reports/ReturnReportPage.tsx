@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Undo2, Package, Layers, Download } from 'lucide-react'
+import { Undo2, Package, Layers, TrendingDown, Download } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useReturnReport } from '@/hooks/useReports'
 import { useAllWarehouses } from '@/hooks/useWarehouses'
@@ -113,10 +113,11 @@ export default function ReturnReportPage() {
       </div>
 
       {summary && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatsCard icon={Undo2} label="Total Returns" value={summary.total_returns} />
           <StatsCard icon={Package} label="Total Units" value={summary.total_units} />
           <StatsCard icon={Layers} label="Total Value" value={formatCurrency(summary.total_value)} />
+          <StatsCard icon={TrendingDown} label="Total COGS Reversed" value={formatCurrency(summary.total_cogs)} />
         </div>
       )}
 

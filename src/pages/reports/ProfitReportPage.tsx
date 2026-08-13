@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DollarSign, TrendingDown, TrendingUp, Percent, ShoppingBag, Package, CalendarDays, CalendarRange } from 'lucide-react'
+import { DollarSign, TrendingDown, TrendingUp, Percent, ShoppingBag, Package, Undo2, CalendarDays, CalendarRange } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useProfitReport } from '@/hooks/useReports'
 import { useAllWarehouses } from '@/hooks/useWarehouses'
@@ -37,8 +37,12 @@ export default function ProfitReportPage() {
 
   const dailyColumns: ColumnDef<DailySalesRow, unknown>[] = [
     { accessorKey: 'date', header: 'Date' },
-    { accessorKey: 'revenue', header: 'Revenue', cell: ({ row }) => formatCurrency(row.original.revenue) },
-    { accessorKey: 'cogs', header: 'COGS', cell: ({ row }) => formatCurrency(row.original.cogs) },
+    { accessorKey: 'gross_sales', header: 'Gross Sales', cell: ({ row }) => formatCurrency(row.original.gross_sales) },
+    { accessorKey: 'return_value', header: 'Returns', cell: ({ row }) => (
+      <span className="text-emerald-600 dark:text-emerald-400">-{formatCurrency(row.original.return_value)}</span>
+    )},
+    { accessorKey: 'revenue', header: 'Net Revenue', cell: ({ row }) => formatCurrency(row.original.revenue) },
+    { accessorKey: 'cogs', header: 'Net COGS', cell: ({ row }) => formatCurrency(row.original.cogs) },
     { accessorKey: 'gross_profit', header: 'Gross Profit', cell: ({ row }) => (
       <span className={row.original.gross_profit < 0 ? 'text-destructive' : 'text-green-600'}>{formatCurrency(row.original.gross_profit)}</span>
     )},
@@ -49,8 +53,12 @@ export default function ProfitReportPage() {
 
   const monthlyColumns: ColumnDef<MonthlySalesRow, unknown>[] = [
     { accessorKey: 'month', header: 'Month', cell: ({ row }) => monthLabel(row.original.month) },
-    { accessorKey: 'revenue', header: 'Revenue', cell: ({ row }) => formatCurrency(row.original.revenue) },
-    { accessorKey: 'cogs', header: 'COGS', cell: ({ row }) => formatCurrency(row.original.cogs) },
+    { accessorKey: 'gross_sales', header: 'Gross Sales', cell: ({ row }) => formatCurrency(row.original.gross_sales) },
+    { accessorKey: 'return_value', header: 'Returns', cell: ({ row }) => (
+      <span className="text-emerald-600 dark:text-emerald-400">-{formatCurrency(row.original.return_value)}</span>
+    )},
+    { accessorKey: 'revenue', header: 'Net Revenue', cell: ({ row }) => formatCurrency(row.original.revenue) },
+    { accessorKey: 'cogs', header: 'Net COGS', cell: ({ row }) => formatCurrency(row.original.cogs) },
     { accessorKey: 'gross_profit', header: 'Gross Profit', cell: ({ row }) => (
       <span className={row.original.gross_profit < 0 ? 'text-destructive' : 'text-green-600'}>{formatCurrency(row.original.gross_profit)}</span>
     )},
@@ -81,8 +89,8 @@ export default function ProfitReportPage() {
       {/* Summary Cards */}
       {summary && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatsCard icon={DollarSign} label="Revenue" value={formatCurrency(summary.revenue)} />
-          <StatsCard icon={TrendingDown} label="COGS" value={formatCurrency(summary.cogs)} />
+          <StatsCard icon={DollarSign} label="Net Revenue (after returns)" value={formatCurrency(summary.revenue)} />
+          <StatsCard icon={TrendingDown} label="Net COGS (after returns)" value={formatCurrency(summary.cogs)} />
           <StatsCard
             icon={TrendingUp}
             label="Gross Profit"
@@ -90,6 +98,8 @@ export default function ProfitReportPage() {
             iconClassName={summary.gross_profit < 0 ? 'bg-destructive/10' : undefined}
           />
           <StatsCard icon={Percent} label="Gross Margin" value={`${summary.gross_margin.toFixed(2)}%`} />
+          <StatsCard icon={TrendingUp} label="Gross Sales" value={formatCurrency(summary.gross_sales)} />
+          <StatsCard icon={Undo2} label="Returns" value={formatCurrency(summary.return_value)} iconClassName="bg-emerald-600/10" />
           <StatsCard icon={ShoppingBag} label="Sales Count" value={summary.sales_count} />
           <StatsCard icon={Package} label="Units Sold" value={summary.units_sold} />
         </div>

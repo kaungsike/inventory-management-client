@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DollarSign, TrendingDown, TrendingUp, Percent, ShoppingBag, Package, Receipt, Download } from 'lucide-react'
+import { DollarSign, TrendingDown, TrendingUp, Percent, ShoppingBag, Package, Receipt, Undo2, Download } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useSalesReport } from '@/hooks/useReports'
 import { useAllWarehouses } from '@/hooks/useWarehouses'
@@ -87,7 +87,7 @@ export default function SalesReportPage() {
     <div className="space-y-6">
       <PageHeader
         title="Sales Report"
-        description="Historical sales revenue, COGS and profit from transaction snapshots"
+        description="Historical sales revenue, COGS and profit from transaction snapshots, net of completed customer returns"
         action={
           <Button variant="outline" onClick={exportCSV} disabled={!rows.length}>
             <Download className="size-4 mr-2" />Export CSV
@@ -112,19 +112,30 @@ export default function SalesReportPage() {
 
       {/* Summary Cards */}
       {summary && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatsCard icon={DollarSign} label="Total Revenue" value={formatCurrency(summary.revenue)} />
-          <StatsCard icon={TrendingDown} label="Total COGS" value={formatCurrency(summary.cogs)} />
-          <StatsCard
-            icon={TrendingUp}
-            label="Gross Profit"
-            value={formatCurrency(summary.gross_profit)}
-            iconClassName={summary.gross_profit < 0 ? 'bg-destructive/10' : undefined}
-          />
-          <StatsCard icon={Percent} label="Gross Margin" value={`${summary.gross_margin.toFixed(2)}%`} />
-          <StatsCard icon={ShoppingBag} label="Sales Count" value={summary.sales_count} />
-          <StatsCard icon={Package} label="Units Sold" value={summary.units_sold} />
-          <StatsCard icon={Receipt} label="Avg Order Value" value={formatCurrency(summary.average_order_value)} />
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatsCard icon={DollarSign} label="Net Revenue (after returns)" value={formatCurrency(summary.revenue)} />
+            <StatsCard icon={TrendingDown} label="Net COGS (after returns)" value={formatCurrency(summary.cogs)} />
+            <StatsCard
+              icon={TrendingUp}
+              label="Gross Profit"
+              value={formatCurrency(summary.gross_profit)}
+              iconClassName={summary.gross_profit < 0 ? 'bg-destructive/10' : undefined}
+            />
+            <StatsCard icon={Percent} label="Gross Margin" value={`${summary.gross_margin.toFixed(2)}%`} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatsCard icon={TrendingUp} label="Gross Sales" value={formatCurrency(summary.gross_sales)} />
+            <StatsCard icon={Undo2} label="Returns" value={formatCurrency(summary.return_value)} iconClassName="bg-emerald-600/10" />
+            <StatsCard icon={ShoppingBag} label="Sales Count" value={summary.sales_count} />
+            <StatsCard icon={Package} label="Units Sold" value={summary.units_sold} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatsCard icon={TrendingDown} label="Sales COGS" value={formatCurrency(summary.sales_cogs)} />
+            <StatsCard icon={Undo2} label="Returned COGS" value={formatCurrency(summary.returned_cogs)} iconClassName="bg-emerald-600/10" />
+            <StatsCard icon={Package} label="Returned Units" value={summary.returned_units} />
+            <StatsCard icon={Receipt} label="Avg Order Value" value={formatCurrency(summary.average_order_value)} />
+          </div>
         </div>
       )}
 

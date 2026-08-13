@@ -15,8 +15,28 @@ import type { FinancialSummary } from '@/lib/types'
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444']
 
+const EMPTY_FINANCIAL: FinancialSummary = {
+  gross_sales: 0,
+  return_value: 0,
+  net_sales: 0,
+  sales_cogs: 0,
+  returned_cogs: 0,
+  net_cogs: 0,
+  gross_profit: 0,
+  gross_margin: 0,
+  gross_sales_count: 0,
+  completed_returns_count: 0,
+  net_sales_count: 0,
+  units_sold: 0,
+  returned_units: 0,
+  revenue: 0,
+  cogs: 0,
+  sales_count: 0,
+  average_order_value: 0,
+}
+
 function FinancialCard({ title, icon: Icon, data }: { title: string; icon: LucideIcon; data?: FinancialSummary }) {
-  const financial = data ?? { revenue: 0, cogs: 0, gross_profit: 0, gross_margin: 0, sales_count: 0, units_sold: 0, average_order_value: 0 }
+  const financial = data ?? EMPTY_FINANCIAL
   return (
     <Card>
       <CardHeader>
@@ -28,11 +48,19 @@ function FinancialCard({ title, icon: Icon, data }: { title: string; icon: Lucid
       <CardContent>
         <div className="grid grid-cols-2 gap-x-4 gap-y-3">
           <div>
-            <p className="text-xs text-muted-foreground">Revenue</p>
+            <p className="text-xs text-muted-foreground">Gross Sales</p>
+            <p className="text-lg font-bold">{formatCurrency(financial.gross_sales)}</p>
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Returns</p>
+            <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(financial.return_value)}</p>
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Net Revenue</p>
             <p className="text-lg font-bold">{formatCurrency(financial.revenue)}</p>
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">COGS</p>
+            <p className="text-xs text-muted-foreground">Net COGS</p>
             <p className="text-lg font-bold">{formatCurrency(financial.cogs)}</p>
           </div>
           <div>
