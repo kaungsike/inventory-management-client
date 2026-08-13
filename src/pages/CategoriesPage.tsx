@@ -234,7 +234,7 @@ export default function CategoriesPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
         title="Delete Category"
-        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        description={`Are you sure you want to delete "${deleteTarget?.name}"? This will archive the category.`}
         confirmLabel="Delete"
       />
     </div>

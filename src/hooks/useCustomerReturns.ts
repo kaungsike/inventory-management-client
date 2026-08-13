@@ -54,10 +54,5 @@ export function useCustomerReturnMutation() {
     onSuccess: () => { toast.success('Customer return cancelled'); invalidate() },
   })
 
-  const remove = useMutation({
-    mutationFn: (id: number) => inventoryApi.delete(`/customer-returns/${id}`),
-    onSuccess: () => { toast.success('Customer return deleted'); invalidate() },
-  })
-
-  return { create, update, complete, cancel, remove }
+  return { create, update, complete, cancel }
 }

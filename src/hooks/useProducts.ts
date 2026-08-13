@@ -26,16 +26,6 @@ export function useProduct(id: number | null) {
   })
 }
 
-export function useLowStockProducts() {
-  return useQuery<Product[]>({
-    queryKey: ['products', 'low-stock'],
-    queryFn: async () => {
-      const { data } = await inventoryApi.get('/products/low-stock')
-      return data
-    },
-  })
-}
-
 export function useProductMutation() {
   const queryClient = useQueryClient()
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['products'] })

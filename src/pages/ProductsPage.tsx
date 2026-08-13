@@ -178,7 +178,7 @@ export default function ProductsPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={async () => { if (deleteTarget) await remove.mutateAsync(deleteTarget.id) }}
         title="Delete Product"
-        description={`Delete "${deleteTarget?.name}"? This cannot be undone.`}
+        description={`Archive "${deleteTarget?.name}"? Archived products are hidden from lists and can be restored.`}
         confirmLabel="Delete"
       />
     </div>

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Edit2, Plus, Search, Trash2, UserCheck, UserX } from 'lucide-react'
 import { PageHeader } from '@/components/common/PageHeader'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
+import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -16,6 +17,8 @@ export default function UsersPage() {
   const [search, setSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [deleteTarget, setDeleteTarget] = useState<UserItem | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
   const currentUser = useAuthStore((s) => s.user)
   const navigate = useNavigate()
@@ -32,17 +35,16 @@ export default function UsersPage() {
 
   const handleDelete = (user: UserItem) => {
     if (user.id === currentUser?.id) {
-      alert('You cannot delete your own account.')
+      setDeleteError('You cannot delete your own account.')
       return
     }
-    if (confirm(`Are you sure you want to delete user "${user.name}"?`)) {
-      deleteUser.mutate(user.id)
-    }
+    setDeleteError(null)
+    setDeleteTarget(user)
   }
 
   const handleToggleStatus = (user: UserItem) => {
     if (user.id === currentUser?.id) {
-      alert('You cannot deactivate your own account.')
+      setDeleteError('You cannot deactivate your own account.')
       return
     }
     toggleStatus.mutate(user.id)
@@ -219,6 +221,21 @@ export default function UsersPage() {
           </div>
         </Card>
       )}
+
+      {deleteError && (
+        <div className="p-3 text-xs rounded-md bg-destructive/10 text-destructive border border-destructive/20 text-center">
+          {deleteError}
+        </div>
+      )}
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={async () => { if (deleteTarget) await deleteUser.mutateAsync(deleteTarget.id) }}
+        title="Delete User"
+        description={`Delete user "${deleteTarget?.name}"? This cannot be undone.`}
+        confirmLabel="Delete"
+      />
     </div>
   )
 }
