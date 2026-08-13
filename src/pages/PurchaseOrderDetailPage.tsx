@@ -26,7 +26,7 @@ export default function PurchaseOrderDetailPage() {
   const { receive, updateStatus } = usePurchaseOrderMutation()
   const { data: warehouses = [] } = useAllWarehouses()
 
-  const defaultWarehouseId = String(po?.warehouse_id ?? warehouses[0]?.id ?? 1)
+  const defaultWarehouseId = String(po?.warehouse_id ?? warehouses[0]?.id ?? '')
 
   const { register, handleSubmit, control } = useForm<ReceiveFormData>({
     values: {
