@@ -17,11 +17,13 @@ const STATUS_LABELS: Record<string, string> = {
   cancelled: 'Cancelled',
   confirmed: 'Confirmed',
   shipped: 'Shipped',
+  completed: 'Completed',
   purchase: 'Purchase',
   sale: 'Sale',
   transfer: 'Transfer',
   adjustment: 'Adjustment',
   return: 'Return',
+  return_in: 'Return In',
   damage: 'Damage',
   expired: 'Expired',
 }

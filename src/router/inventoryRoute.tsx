@@ -19,12 +19,16 @@ const CustomersPage = lazy(() => import('@/pages/CustomersPage'))
 const SalesOrdersPage = lazy(() => import('@/pages/SalesOrdersPage'))
 const SalesOrderFormPage = lazy(() => import('@/pages/SalesOrderFormPage'))
 const SalesOrderDetailPage = lazy(() => import('@/pages/SalesOrderDetailPage'))
+const CustomerReturnsPage = lazy(() => import('@/pages/CustomerReturnsPage'))
+const CustomerReturnFormPage = lazy(() => import('@/pages/CustomerReturnFormPage'))
+const CustomerReturnDetailPage = lazy(() => import('@/pages/CustomerReturnDetailPage'))
 const LowStockAlertPage = lazy(() => import('@/pages/LowStockAlertPage'))
 const ActivityLogPage = lazy(() => import('@/pages/ActivityLogPage'))
 const SalesReportPage = lazy(() => import('@/pages/reports/SalesReportPage'))
 const ProfitReportPage = lazy(() => import('@/pages/reports/ProfitReportPage'))
 const InventoryValuationPage = lazy(() => import('@/pages/reports/InventoryValuationPage'))
 const StockWriteOffReportPage = lazy(() => import('@/pages/reports/StockWriteOffReportPage'))
+const ReturnReportPage = lazy(() => import('@/pages/reports/ReturnReportPage'))
 const UsersPage = lazy(() => import('@/pages/users/UsersPage'))
 const UserFormPage = lazy(() => import('@/pages/users/UserFormPage'))
 
@@ -177,6 +181,20 @@ const inventoryRoute = [
     ],
   },
   {
+    path: '/customer-returns',
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <Suspense fallback={<Fallback />}><CustomerReturnsPage /></Suspense> },
+      { path: 'new', element: <Suspense fallback={<Fallback />}><CustomerReturnFormPage /></Suspense> },
+      { path: ':id', element: <Suspense fallback={<Fallback />}><CustomerReturnDetailPage /></Suspense> },
+      { path: ':id/edit', element: <Suspense fallback={<Fallback />}><CustomerReturnFormPage /></Suspense> },
+    ],
+  },
+  {
     path: '/low-stock',
     element: (
       <ProtectedRoute>
@@ -240,6 +258,17 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><StockWriteOffReportPage /></Suspense> },
+    ],
+  },
+  {
+    path: '/reports/returns',
+    element: (
+      <ProtectedRoute allowedRoles={['admin', 'manager']}>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <Suspense fallback={<Fallback />}><ReturnReportPage /></Suspense> },
     ],
   },
   {

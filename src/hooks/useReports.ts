@@ -4,6 +4,7 @@ import type {
   InventoryValuation,
   ProfitReport,
   ReportFilters,
+  ReturnReport,
   SalesReport,
   StockWriteOffReport,
   WriteOffFilters,
@@ -57,6 +58,16 @@ export function useStockWriteOffReport(filters: WriteOffFilters = {}) {
     queryKey: ['reports', 'write-off', filters],
     queryFn: async () => {
       const { data } = await inventoryApi.get('/reports/write-off', { params: filters })
+      return data
+    },
+  })
+}
+
+export function useReturnReport(filters: { date_from?: string; date_to?: string; warehouse_id?: number; customer_id?: number } = {}) {
+  return useQuery<ReturnReport>({
+    queryKey: ['reports', 'returns', filters],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/reports/returns', { params: filters })
       return data
     },
   })

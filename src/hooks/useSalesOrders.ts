@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { inventoryApi } from '@/lib/api'
-import type { SalesOrder, PaginatedResponse } from '@/lib/types'
+import type { SalesOrder, PaginatedResponse, ReturnableSalesOrder } from '@/lib/types'
 import { toast } from 'sonner'
 
 interface SOFilters { status?: string; customer_id?: number; date_from?: string; date_to?: string; page?: number; per_page?: number }
@@ -23,6 +23,18 @@ export function useSalesOrder(id: number | null) {
       return data
     },
     enabled: !!id,
+  })
+}
+
+export function useReturnableSalesOrder(id: number | null) {
+  return useQuery<ReturnableSalesOrder>({
+    queryKey: ['sales-orders', id, 'returnable'],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get(`/sales-orders/${id}/returnable`)
+      return data
+    },
+    enabled: !!id,
+    retry: false,
   })
 }
 

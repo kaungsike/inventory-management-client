@@ -76,7 +76,7 @@ export interface InventoryTransaction {
   product_sku: string | null
   warehouse_id: number
   user_id: number | null
-  type: 'purchase' | 'sale' | 'transfer' | 'adjustment' | 'return' | 'damage' | 'expired'
+  type: 'purchase' | 'sale' | 'transfer' | 'adjustment' | 'return' | 'return_in' | 'damage' | 'expired'
   quantity: number
   unit_cost: number | null
   unit_price: number | null
@@ -175,6 +175,8 @@ export interface DashboardStats {
   month_financial?: FinancialSummary
   today_write_off?: number
   month_write_off?: number
+  today_returns_value?: number
+  month_returns_value?: number
   last_30_days_sales?: DailySalesRow[]
   monthly_financial_summary?: MonthlySalesRow[]
 }
@@ -347,6 +349,105 @@ export interface ActivityLogFilters {
   action?: string
   model_type?: string
   model_id?: number
+  date_from?: string
+  date_to?: string
+  search?: string
+  page?: number
+  per_page?: number
+}
+
+export interface CustomerReturnItem {
+  id: number
+  customer_return_id: number
+  sales_order_item_id: number | null
+  product_id: number
+  product_name: string
+  product_sku: string
+  unit_price: number
+  unit_cost: number | null
+  quantity: number
+  total_amount: number
+  reason: string | null
+  product?: Product
+}
+
+export type CustomerReturnStatus = 'draft' | 'completed' | 'cancelled'
+
+export interface CustomerReturn {
+  id: number
+  return_number: string
+  sales_order_id: number
+  customer_id: number
+  warehouse_id: number
+  user_id: number | null
+  status: CustomerReturnStatus
+  return_date: string | null
+  total_amount: number
+  reason: string | null
+  notes: string | null
+  customer?: Customer
+  warehouse?: Warehouse
+  user?: { id: number; name: string } | null
+  sales_order?: SalesOrder
+  items?: CustomerReturnItem[]
+  items_count?: number
+  created_at: string
+  updated_at: string
+}
+
+export interface ReturnableSalesOrderItem {
+  id: number
+  product_id: number
+  product_name: string
+  product_sku: string
+  quantity_shipped: number
+  already_returned: number
+  returnable_quantity: number
+  unit_price: string
+  unit_cost: string | null
+}
+
+export interface ReturnableSalesOrder {
+  sales_order: SalesOrder
+  items: ReturnableSalesOrderItem[]
+}
+
+export interface ReturnReportRow {
+  id: number
+  return_number: string
+  return_date: string
+  customer_id: number
+  customer_name: string | null
+  warehouse_id: number
+  warehouse_name: string | null
+  sales_order_id: number
+  so_number: string | null
+  product_id: number
+  product_name: string
+  product_sku: string
+  quantity: number
+  unit_price: number
+  unit_cost: number
+  value: number
+  reason: string | null
+}
+
+export interface ReturnReportSummary {
+  total_returns: number
+  total_units: number
+  total_value: number
+}
+
+export interface ReturnReport {
+  summary: ReturnReportSummary
+  data: ReturnReportRow[]
+}
+
+export interface ReturnFilters {
+  status?: string
+  customer_id?: number
+  warehouse_id?: number
+  sales_order_id?: number
   date_from?: string
   date_to?: string
   search?: string

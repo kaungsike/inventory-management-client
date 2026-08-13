@@ -101,6 +101,7 @@ export default function TransactionsPage() {
             <SelectItem value="transfer">Transfer</SelectItem>
             <SelectItem value="adjustment">Adjustment</SelectItem>
             <SelectItem value="return">Return</SelectItem>
+            <SelectItem value="return_in">Return In</SelectItem>
             <SelectItem value="damage">Damage</SelectItem>
             <SelectItem value="expired">Expired</SelectItem>
           </SelectContent>

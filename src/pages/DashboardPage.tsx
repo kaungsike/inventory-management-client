@@ -1,5 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { Package, AlertTriangle, TrendingUp, Users, CalendarDays, CalendarRange, PackageX } from 'lucide-react'
+import { Package, AlertTriangle, TrendingUp, Users, CalendarDays, CalendarRange, PackageX, Undo2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useDashboardStats } from '@/hooks/useDashboard'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -121,6 +121,18 @@ export default function DashboardPage() {
             label="Written Off This Month"
             value={formatCurrency(stats?.month_write_off ?? 0)}
             iconClassName="bg-destructive/10"
+          />
+          <StatsCard
+            icon={Undo2}
+            label="Returns Today"
+            value={formatCurrency(stats?.today_returns_value ?? 0)}
+            iconClassName="bg-emerald-600/10"
+          />
+          <StatsCard
+            icon={Undo2}
+            label="Returns This Month"
+            value={formatCurrency(stats?.month_returns_value ?? 0)}
+            iconClassName="bg-emerald-600/10"
           />
         </div>
       </RoleGuard>

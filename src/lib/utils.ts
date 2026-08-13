@@ -21,10 +21,10 @@ export function formatDateTime(date: string | null | undefined): string {
 
 export function getStatusColor(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
   switch (status) {
-    case 'active': case 'received': case 'shipped': return 'default'
+    case 'active': case 'received': case 'shipped': case 'completed': return 'default'
     case 'inactive': case 'cancelled': case 'damage': case 'expired': return 'destructive'
     case 'discontinued': case 'draft': return 'outline'
-    case 'sent': case 'partial': case 'confirmed': return 'secondary'
+    case 'sent': case 'partial': case 'confirmed': case 'return_in': return 'secondary'
     default: return 'secondary'
   }
 }
