@@ -62,7 +62,9 @@ export default function ActivityLogPage() {
     date_to: dateTo || undefined,
     page,
   })
-  const { data: usersData } = useUsers({ per_page: 100 })
+  // The user filter dropdown is admin-only; the `/users` endpoint is admin-only
+  // too, so managers must never trigger this request.
+  const { data: usersData } = useUsers({ per_page: 100, enabled: isAdmin })
 
   const hasFilters = Boolean(search || action || modelType || userId || dateFrom || dateTo)
 
