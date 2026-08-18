@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { inventoryApi } from '@/lib/api'
 import type { Warehouse, WarehouseDetail, PaginatedResponse } from '@/lib/types'
+import { useUsers } from './useUsers'
 import { toast } from 'sonner'
 
 interface WarehouseFilters { search?: string; status?: string; page?: number }
@@ -23,6 +24,11 @@ export function useAllWarehouses() {
       return data.data
     },
   })
+}
+
+export function useActiveManagers() {
+  const { data } = useUsers({ role: 'manager', is_active: 'true', per_page: 100 })
+  return (data?.data ?? []).filter((user) => user.is_active)
 }
 
 export function useWarehouseDetail(id: number | null) {

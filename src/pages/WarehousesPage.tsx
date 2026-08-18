@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Plus, Edit2, Archive, ArchiveRestore, Eye, X, Warehouse as WarehouseIcon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Plus, Edit2, Archive, ArchiveRestore, Eye, Warehouse as WarehouseIcon } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
-import { useWarehouses, useWarehouseDetail, useWarehouseMutation } from '@/hooks/useWarehouses'
+import { useWarehouses, useWarehouseMutation, useActiveManagers } from '@/hooks/useWarehouses'
+import { useAuth } from '@/hooks/useAuth'
 import { PageHeader } from '@/components/common/PageHeader'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
@@ -14,12 +16,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { RoleGuard } from '@/components/auth/RoleGuard'
 import { STATUS_LABELS } from '@/lib/labels'
-import { formatCurrency } from '@/lib/utils'
-import type { Warehouse, Inventory } from '@/lib/types'
+import type { Warehouse } from '@/lib/types'
 
 const WAREHOUSE_STATUS_ITEMS = {
   active: 'Active',
@@ -34,23 +35,28 @@ interface WarehouseFormData {
   manager_name: string
   phone: string
   status: 'active' | 'inactive'
+  manager_id: string
 }
 
-function WarehouseForm({ defaultValues, onSubmit, onCancel, loading, isEdit }: {
+function WarehouseForm({ defaultValues, onSubmit, onCancel, loading, isEdit, canAssignManager, managers }: {
   defaultValues?: Partial<WarehouseFormData>
   onSubmit: (d: WarehouseFormData) => Promise<void>
   onCancel: () => void
   loading?: boolean
   isEdit?: boolean
+  canAssignManager?: boolean
+  managers?: { id: number; name: string }[]
 }) {
   const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<WarehouseFormData>({
     defaultValues: {
       name: '', location: '', description: '',
-      manager_name: '', phone: '', status: 'active',
+      manager_name: '', phone: '', status: 'active', manager_id: '',
       ...defaultValues,
     },
   })
   const status = watch('status')
+  const managerId = watch('manager_id')
+  const managerItems = Object.fromEntries((managers ?? []).map((m) => [String(m.id), m.name]))
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -64,6 +70,22 @@ function WarehouseForm({ defaultValues, onSubmit, onCancel, loading, isEdit }: {
         <Input {...register('location', { required: 'Location is required' })} className="mt-1" />
         {errors.location && <p className="text-xs text-destructive mt-1">{errors.location.message}</p>}
       </div>
+      {canAssignManager && (
+        <div>
+          <Label>Assigned Manager</Label>
+          <Select value={managerId} onValueChange={(v) => setValue('manager_id', v ?? '')} items={managerItems}>
+            <SelectTrigger className="w-full mt-1">
+              <SelectValue placeholder="Unassigned" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">Unassigned</SelectItem>
+              {(managers ?? []).map((m) => (
+                <SelectItem key={m.id} value={String(m.id)}>{m.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
       <div>
         <Label>Manager Name</Label>
         <Input {...register('manager_name')} className="mt-1" />
@@ -98,99 +120,6 @@ function WarehouseForm({ defaultValues, onSubmit, onCancel, loading, isEdit }: {
   )
 }
 
-function InventoryDetailTable({ inventory }: { inventory: Inventory[] }) {
-  const columns: ColumnDef<Inventory, unknown>[] = [
-    {
-      accessorKey: 'sku',
-      header: 'SKU',
-      cell: ({ row }) => <span className="font-mono text-xs">{row.original.product?.sku ?? '—'}</span>,
-    },
-    {
-      accessorKey: 'product',
-      header: 'Product',
-      cell: ({ row }) => row.original.product?.name ?? '—',
-    },
-    {
-      accessorKey: 'quantity',
-      header: 'Qty',
-      cell: ({ row }) => row.original.quantity,
-    },
-    {
-      accessorKey: 'reserved_quantity',
-      header: 'Reserved',
-      cell: ({ row }) => row.original.reserved_quantity,
-    },
-    {
-      accessorKey: 'available_quantity',
-      header: 'Available',
-      cell: ({ row }) => row.original.available_quantity,
-    },
-    {
-      accessorKey: 'average_cost',
-      header: 'Avg Cost',
-      cell: ({ row }) => formatCurrency(row.original.product?.average_cost),
-    },
-    {
-      id: 'value',
-      header: 'Value',
-      cell: ({ row }) => formatCurrency(row.original.quantity * (row.original.product?.average_cost ?? 0)),
-    },
-  ]
-
-  return <DataTable data={inventory} columns={columns} />
-}
-
-function WarehouseDetailCard({ warehouse, onClose }: { warehouse: Warehouse; onClose: () => void }) {
-  const { data: detail, isLoading } = useWarehouseDetail(warehouse.id)
-
-  return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CardTitle>{warehouse.name}</CardTitle>
-            <StatusBadge status={warehouse.archived_at ? 'archived' : warehouse.status} />
-          </div>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="size-4" />
-          </Button>
-        </div>
-        <CardDescription>{warehouse.location}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <LoadingSpinner className="min-h-[120px]" />
-        ) : detail ? (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="rounded-lg border p-4">
-                <p className="text-xs text-muted-foreground">Product Types</p>
-                <p className="text-2xl font-semibold mt-1">{detail.total_products}</p>
-              </div>
-              <div className="rounded-lg border p-4">
-                <p className="text-xs text-muted-foreground">Total Units</p>
-                <p className="text-2xl font-semibold mt-1">{detail.total_units}</p>
-              </div>
-              <div className="rounded-lg border p-4">
-                <p className="text-xs text-muted-foreground">Inventory Value</p>
-                <p className="text-2xl font-semibold mt-1">{formatCurrency(detail.inventory_value)}</p>
-              </div>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold mb-2">Current Inventory</h3>
-              {detail.inventory.length ? (
-                <InventoryDetailTable inventory={detail.inventory} />
-              ) : (
-                <p className="text-sm text-muted-foreground">No stock in this warehouse.</p>
-              )}
-            </div>
-          </div>
-        ) : null}
-      </CardContent>
-    </Card>
-  )
-}
-
 interface ArchiveBlockInfo {
   message: string
   total_quantity: number
@@ -199,18 +128,34 @@ interface ArchiveBlockInfo {
 }
 
 export default function WarehousesPage() {
+  const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')
   const [page, setPage] = useState(1)
   const [editingWarehouse, setEditingWarehouse] = useState<Warehouse | null>(null)
-  const [viewTarget, setViewTarget] = useState<Warehouse | null>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [archiveTarget, setArchiveTarget] = useState<Warehouse | null>(null)
   const [restoreTarget, setRestoreTarget] = useState<Warehouse | null>(null)
   const [blockInfo, setBlockInfo] = useState<ArchiveBlockInfo | null>(null)
 
+  const { isAdmin } = useAuth()
+  const managers = useActiveManagers()
+
   const { data, isLoading } = useWarehouses({ search, status: status || undefined, page })
   const { create, update, archive, restore } = useWarehouseMutation()
+
+  const buildPayload = (d: WarehouseFormData) => {
+    const payload: Record<string, unknown> = {
+      name: d.name,
+      location: d.location,
+      description: d.description,
+      manager_name: d.manager_name,
+      phone: d.phone,
+      status: d.status,
+    }
+    if (isAdmin) payload.manager_id = d.manager_id ? Number(d.manager_id) : null
+    return payload
+  }
 
   const handleArchive = async () => {
     if (!archiveTarget) return
@@ -233,9 +178,9 @@ export default function WarehousesPage() {
     { accessorKey: 'name', header: 'Name' },
     { accessorKey: 'location', header: 'Location' },
     {
-      accessorKey: 'manager_name',
+      accessorKey: 'manager',
       header: 'Manager',
-      cell: ({ row }) => row.original.manager_name ?? '—',
+      cell: ({ row }) => row.original.manager?.name ?? 'Unassigned',
     },
     {
       accessorKey: 'total_stock',
@@ -255,7 +200,7 @@ export default function WarehousesPage() {
         const isArchived = !!w.archived_at
         return (
           <div className="flex gap-1">
-            <Button variant="ghost" size="sm" title="View" onClick={() => setViewTarget(w)}>
+            <Button variant="ghost" size="sm" title="View" onClick={() => navigate(`/warehouses/${w.id}`)}>
               <Eye className="size-3" />
             </Button>
             {isArchived ? (
@@ -288,7 +233,7 @@ export default function WarehousesPage() {
     <div className="space-y-6">
       <PageHeader
         title="Warehouses"
-        description="Manage warehouse locations and stock"
+        description="Manage warehouse locations, assigned managers and stock"
         action={
           <RoleGuard roles={['admin', 'manager']}>
             <Button onClick={() => setShowCreate(true)}>
@@ -325,7 +270,9 @@ export default function WarehousesPage() {
           <CardHeader><CardTitle>New Warehouse</CardTitle></CardHeader>
           <CardContent>
             <WarehouseForm
-              onSubmit={async (d) => { await create.mutateAsync(d); setShowCreate(false) }}
+              canAssignManager={isAdmin}
+              managers={managers}
+              onSubmit={async (d) => { await create.mutateAsync(buildPayload(d)); setShowCreate(false) }}
               onCancel={() => setShowCreate(false)}
               loading={create.isPending}
             />
@@ -339,6 +286,8 @@ export default function WarehousesPage() {
           <CardContent>
             <WarehouseForm
               isEdit
+              canAssignManager={isAdmin}
+              managers={managers}
               defaultValues={{
                 name: editingWarehouse.name,
                 location: editingWarehouse.location,
@@ -346,16 +295,15 @@ export default function WarehousesPage() {
                 manager_name: editingWarehouse.manager_name ?? '',
                 phone: editingWarehouse.phone ?? '',
                 status: editingWarehouse.status,
+                manager_id: editingWarehouse.manager_id ? String(editingWarehouse.manager_id) : '',
               }}
-              onSubmit={async (d) => { await update.mutateAsync({ id: editingWarehouse.id, data: d }); setEditingWarehouse(null) }}
+              onSubmit={async (d) => { await update.mutateAsync({ id: editingWarehouse.id, data: buildPayload(d) }); setEditingWarehouse(null) }}
               onCancel={() => setEditingWarehouse(null)}
               loading={update.isPending}
             />
           </CardContent>
         </Card>
       )}
-
-      {viewTarget && <WarehouseDetailCard warehouse={viewTarget} onClose={() => setViewTarget(null)} />}
 
       {isLoading ? (
         <LoadingSpinner className="min-h-[200px]" />

@@ -9,6 +9,7 @@ const ProductFormPage = lazy(() => import('@/pages/ProductFormPage'))
 const CategoriesPage = lazy(() => import('@/pages/CategoriesPage'))
 const SuppliersPage = lazy(() => import('@/pages/SuppliersPage'))
 const WarehousesPage = lazy(() => import('@/pages/WarehousesPage'))
+const WarehouseDetailPage = lazy(() => import('@/pages/WarehouseDetailPage'))
 const InventoryPage = lazy(() => import('@/pages/InventoryPage'))
 const InventoryTransferPage = lazy(() => import('@/pages/InventoryTransferPage'))
 const TransactionsPage = lazy(() => import('@/pages/TransactionsPage'))
@@ -104,6 +105,7 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><WarehousesPage /></Suspense> },
+      { path: ':id', element: <Suspense fallback={<Fallback />}><WarehouseDetailPage /></Suspense> },
     ],
   },
   {

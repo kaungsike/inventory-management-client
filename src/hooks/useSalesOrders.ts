@@ -3,7 +3,7 @@ import { inventoryApi } from '@/lib/api'
 import type { SalesOrder, PaginatedResponse, ReturnableSalesOrder } from '@/lib/types'
 import { toast } from 'sonner'
 
-interface SOFilters { status?: string; customer_id?: number; date_from?: string; date_to?: string; page?: number; per_page?: number }
+interface SOFilters { status?: string; customer_id?: number; warehouse_id?: number; date_from?: string; date_to?: string; page?: number; per_page?: number }
 
 export function useSalesOrders(filters: SOFilters = {}) {
   return useQuery<PaginatedResponse<SalesOrder>>({

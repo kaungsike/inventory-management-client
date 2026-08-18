@@ -14,6 +14,7 @@ export interface UserFilters {
   search?: string
   role?: string
   status?: string
+  is_active?: string
   page?: number
   per_page?: number
 }

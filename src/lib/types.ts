@@ -47,6 +47,8 @@ export interface Warehouse {
   location: string
   description: string | null
   manager_name: string | null
+  manager_id: number | null
+  manager?: { id: number; name: string; email: string } | null
   phone: string | null
   status: 'active' | 'inactive'
   archived_at: string | null
@@ -59,6 +61,8 @@ export interface Warehouse {
 export interface WarehouseDetail extends Warehouse {
   total_products: number
   total_units: number
+  reserved_units: number
+  available_units: number
   inventory_value: number
   inventory: Inventory[]
   inventory_meta: {

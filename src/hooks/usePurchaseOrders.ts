@@ -3,7 +3,7 @@ import { inventoryApi } from '@/lib/api'
 import type { PurchaseOrder, PaginatedResponse } from '@/lib/types'
 import { toast } from 'sonner'
 
-interface POFilters { status?: string; supplier_id?: number; date_from?: string; date_to?: string; page?: number; per_page?: number }
+interface POFilters { status?: string; supplier_id?: number; warehouse_id?: number; date_from?: string; date_to?: string; page?: number; per_page?: number }
 
 export function usePurchaseOrders(filters: POFilters = {}) {
   return useQuery<PaginatedResponse<PurchaseOrder>>({
