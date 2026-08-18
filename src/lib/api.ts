@@ -33,7 +33,11 @@ inventoryApi.interceptors.response.use(
       }
     } else if (status === 403) {
       toast.error(message || "You don't have permission to perform this action")
-    } else if (status !== 422) {
+    } else if (status === 422) {
+      // Validation / business-rule rejections: surface the server message
+      // (field-level mapping is not wired up in the current forms).
+      toast.error(message)
+    } else {
       toast.error(message)
     }
 
