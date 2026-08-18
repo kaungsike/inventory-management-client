@@ -2,8 +2,16 @@ import axios from 'axios'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/store/useAuthStore'
 
+// VITE_API_URL (set in .env / at docker build time) points at the deployed
+// API, e.g. https://api.example.com/api/v1. In production builds with no
+// explicit URL we fall back to the same-origin /api/v1 (requires a reverse
+// proxy), and in local development to the Laravel dev server.
+const apiBaseUrl =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? '/api/v1' : 'http://localhost:8000/api/v1')
+
 export const inventoryApi = axios.create({
-  baseURL: import.meta.env.VITE_INVENTORY_API_URL || 'http://localhost:8000/api/v1',
+  baseURL: apiBaseUrl,
   headers: { 'Content-Type': 'application/json' },
 })
 
