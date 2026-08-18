@@ -124,13 +124,6 @@ export default function LoginPage() {
               Sign In
             </Button>
           </form>
-
-          <div className="mt-6 pt-4 border-t border-border text-center text-xs text-muted-foreground space-y-1">
-            <p className="font-semibold text-foreground">Demo Credentials:</p>
-            <p>Admin: <span className="font-mono text-foreground">admin@gmail.com</span></p>
-            <p>Manager: <span className="font-mono text-foreground">manager@gmail.com</span></p>
-            <p className="pt-1">Password: <span className="font-mono font-semibold text-foreground">asdffdsa</span></p>
-          </div>
         </CardContent>
       </Card>
     </div>
