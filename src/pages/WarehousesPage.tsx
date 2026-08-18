@@ -139,7 +139,7 @@ export default function WarehousesPage() {
   const [blockInfo, setBlockInfo] = useState<ArchiveBlockInfo | null>(null)
 
   const { isAdmin } = useAuth()
-  const managers = useActiveManagers()
+  const managers = useActiveManagers(isAdmin)
 
   const { data, isLoading } = useWarehouses({ search, status: status || undefined, page })
   const { create, update, archive, restore } = useWarehouseMutation()

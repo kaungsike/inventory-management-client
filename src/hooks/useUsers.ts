@@ -17,6 +17,7 @@ export interface UserFilters {
   is_active?: string
   page?: number
   per_page?: number
+  enabled?: boolean
 }
 
 interface UsersResponse {
@@ -30,12 +31,14 @@ interface UsersResponse {
 }
 
 export const useUsers = (filters: UserFilters = {}) => {
+  const { enabled = true, ...queryFilters } = filters
   return useQuery<UsersResponse>({
-    queryKey: ['users', filters],
+    queryKey: ['users', queryFilters],
     queryFn: async () => {
-      const response = await inventoryApi.get('/users', { params: filters })
+      const response = await inventoryApi.get('/users', { params: queryFilters })
       return response.data
     },
+    enabled,
   })
 }
 

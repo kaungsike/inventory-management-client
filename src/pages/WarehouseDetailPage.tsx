@@ -60,7 +60,7 @@ export default function WarehouseDetailPage() {
   const [savingManager, setSavingManager] = useState(false)
 
   const { isAdmin } = useAuth()
-  const managers = useActiveManagers()
+  const managers = useActiveManagers(isAdmin)
   const managerItems = Object.fromEntries(managers.map((m) => [String(m.id), m.name]))
 
   const { data: detail, isLoading, isError } = useWarehouseDetail(warehouseId)

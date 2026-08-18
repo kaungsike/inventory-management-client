@@ -38,8 +38,11 @@ export function useTransferTargets(enabled = true) {
   })
 }
 
-export function useActiveManagers() {
-  const { data } = useUsers({ role: 'manager', is_active: 'true', per_page: 100 })
+// The active-manager list powers the admin-only "Assign Manager" selector.
+// The `/users` endpoint is admin-only, so managers must never trigger this
+// request — passing `enabled=false` disables the underlying query entirely.
+export function useActiveManagers(enabled = true) {
+  const { data } = useUsers({ role: 'manager', is_active: 'true', per_page: 100, enabled })
   return (data?.data ?? []).filter((user) => user.is_active)
 }
 
