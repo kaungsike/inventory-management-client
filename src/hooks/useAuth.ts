@@ -9,7 +9,6 @@ export const useAuth = () => {
     isAuthenticated,
     isAdmin: user?.role === 'admin',
     isManager: user?.role === 'manager',
-    isStaff: user?.role === 'staff',
     hasRole: (roles: string[]) => roles.includes(user?.role ?? ''),
     canDelete: user?.role === 'admin',
     canManageUsers: user?.role === 'admin',

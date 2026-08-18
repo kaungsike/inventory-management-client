@@ -129,7 +129,6 @@ export default function LoginPage() {
             <p className="font-semibold text-foreground">Demo Credentials:</p>
             <p>Admin: <span className="font-mono text-foreground">admin@gmail.com</span></p>
             <p>Manager: <span className="font-mono text-foreground">manager@gmail.com</span></p>
-            <p>Staff: <span className="font-mono text-foreground">staff@gmail.com</span></p>
             <p className="pt-1">Password: <span className="font-mono font-semibold text-foreground">asdffdsa</span></p>
           </div>
         </CardContent>

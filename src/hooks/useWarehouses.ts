@@ -16,13 +16,25 @@ export function useWarehouses(filters: WarehouseFilters = {}) {
   })
 }
 
-export function useAllWarehouses() {
+export function useAllWarehouses(enabled = true) {
   return useQuery<Warehouse[]>({
     queryKey: ['warehouses', 'all'],
     queryFn: async () => {
       const { data } = await inventoryApi.get('/warehouses', { params: { status: 'active', per_page: 100 } })
       return data.data
     },
+    enabled,
+  })
+}
+
+export function useTransferTargets(enabled = true) {
+  return useQuery<Warehouse[]>({
+    queryKey: ['warehouses', 'transfer-targets'],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/warehouses/transfer-targets')
+      return data.data
+    },
+    enabled,
   })
 }
 

@@ -24,7 +24,6 @@ export const STATUS_LABELS: Record<string, string> = {
 export const USER_ROLE_LABELS: Record<string, string> = {
   admin: 'Admin',
   manager: 'Manager',
-  staff: 'Staff',
 }
 
 export function statusLabel(status: string | null | undefined): string {

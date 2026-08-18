@@ -5,7 +5,7 @@ export interface AuthUser {
   id: number
   name: string
   email: string
-  role: 'admin' | 'manager' | 'staff'
+  role: 'admin' | 'manager'
   is_active: boolean
 }
 
@@ -21,7 +21,6 @@ interface AuthState {
   canCreatePO: () => boolean
   isAdmin: () => boolean
   isManager: () => boolean
-  isStaff: () => boolean
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -41,7 +40,6 @@ export const useAuthStore = create<AuthState>()(
       canCreatePO: () => ['admin', 'manager'].includes(get().user?.role ?? ''),
       isAdmin: () => get().user?.role === 'admin',
       isManager: () => get().user?.role === 'manager',
-      isStaff: () => get().user?.role === 'staff',
     }),
     {
       name: 'auth_store',

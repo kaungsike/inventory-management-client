@@ -107,7 +107,7 @@ export default function SalesOrderDetailPage() {
       )}
 
       {/* Status Actions */}
-      <RoleGuard roles={['admin', 'manager', 'staff']}>
+      <RoleGuard roles={['admin', 'manager']}>
         <Card>
           <CardHeader><CardTitle>Order Status Actions</CardTitle></CardHeader>
           <CardContent className="flex flex-wrap gap-2 items-center">

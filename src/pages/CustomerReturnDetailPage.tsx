@@ -103,7 +103,7 @@ export default function CustomerReturnDetailPage() {
         </div>
       )}
 
-      <RoleGuard roles={['admin', 'manager', 'staff']}>
+      <RoleGuard roles={['admin', 'manager']}>
         <Card>
           <CardHeader><CardTitle>Return Status Actions</CardTitle></CardHeader>
           <CardContent className="flex flex-wrap gap-2 items-center">

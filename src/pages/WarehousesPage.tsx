@@ -211,7 +211,7 @@ export default function WarehousesPage() {
               </RoleGuard>
             ) : (
               <>
-                <RoleGuard roles={['admin', 'manager']}>
+                <RoleGuard roles={['admin']}>
                   <Button variant="ghost" size="sm" title="Edit" onClick={() => setEditingWarehouse(w)}>
                     <Edit2 className="size-3" />
                   </Button>
@@ -235,7 +235,7 @@ export default function WarehousesPage() {
         title="Warehouses"
         description="Manage warehouse locations, assigned managers and stock"
         action={
-          <RoleGuard roles={['admin', 'manager']}>
+          <RoleGuard roles={['admin']}>
             <Button onClick={() => setShowCreate(true)}>
               <Plus className="size-4 mr-2" />
               Add Warehouse

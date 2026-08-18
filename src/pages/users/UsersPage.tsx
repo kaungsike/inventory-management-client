@@ -100,7 +100,6 @@ export default function UsersPage() {
                 <option value="all">All Roles</option>
                 <option value="admin">Admin</option>
                 <option value="manager">Manager</option>
-                <option value="staff">Staff</option>
               </select>
             </div>
 

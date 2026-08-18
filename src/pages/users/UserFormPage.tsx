@@ -16,7 +16,7 @@ interface UserFormInputs {
   email: string
   password?: string
   password_confirmation?: string
-  role: 'admin' | 'manager' | 'staff'
+  role: 'admin' | 'manager'
   is_active: boolean
 }
 
@@ -41,7 +41,7 @@ export default function UserFormPage() {
       email: '',
       password: '',
       password_confirmation: '',
-      role: 'staff',
+      role: 'manager',
       is_active: true,
     },
   })
@@ -193,7 +193,6 @@ export default function UserFormPage() {
                     className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                     {...field}
                   >
-                    <option value="staff">Staff (Read-only catalog, stock transfers & receive POs)</option>
                     <option value="manager">Manager (CRUD on catalog, approve/cancel POs)</option>
                     <option value="admin">Admin (Full system access & user management)</option>
                   </select>

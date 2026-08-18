@@ -5,7 +5,7 @@ export interface UserItem {
   id: number
   name: string
   email: string
-  role: 'admin' | 'manager' | 'staff'
+  role: 'admin' | 'manager'
   is_active: boolean
   created_at: string
 }

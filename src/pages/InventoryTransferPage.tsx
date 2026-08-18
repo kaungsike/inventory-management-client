@@ -111,6 +111,7 @@ export default function InventoryTransferPage() {
                         onChange={field.onChange}
                         placeholder="Select destination"
                         excludeId={fromWarehouseId ? Number(fromWarehouseId) : undefined}
+                        transferTargets
                       />
                     </div>
                   )}

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 
 interface RoleGuardProps {
-  roles: ('admin' | 'manager' | 'staff')[]
+  roles: ('admin' | 'manager')[]
   children: ReactNode
   fallback?: ReactNode
 }

@@ -87,16 +87,13 @@ interface SidebarProps {
 export function Sidebar({ mobile, onClose }: SidebarProps) {
   const location = useLocation()
   const { sidebarOpen, toggleSidebar } = useAppStore()
-  const { isAdmin, isStaff } = useAuth()
+  const { isAdmin } = useAuth()
   const { data: lowStockItems } = useLowStockInventory()
   const lowStockCount = lowStockItems?.length ?? 0
 
   const collapsed = !mobile && !sidebarOpen
 
-  // Financial reports and audit logs expose sensitive data (admin & manager only).
-  const staffHiddenGroups = ['Reports', 'Audit']
-  const visibleNavGroups = isStaff ? navGroups.filter((group) => !staffHiddenGroups.includes(group.label)) : navGroups
-  const displayNavGroups = isAdmin ? [...visibleNavGroups, adminNavGroup] : visibleNavGroups
+  const displayNavGroups = isAdmin ? [...navGroups, adminNavGroup] : navGroups
 
   return (
     <aside
