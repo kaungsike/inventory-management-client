@@ -82,7 +82,9 @@ export default function PurchaseOrderDetailPage() {
           <div><p className="text-muted-foreground">Receiving Warehouse</p><p className="font-medium">{po.warehouse?.name ?? 'Default Warehouse'}</p></div>
           <div><p className="text-muted-foreground">Order Date</p><p className="font-medium">{formatDate(po.order_date)}</p></div>
           <div><p className="text-muted-foreground">Expected</p><p className="font-medium">{formatDate(po.expected_date)}</p></div>
-          <div><p className="text-muted-foreground">Total Amount</p><p className="font-bold">{formatCurrency(po.total_amount)}</p></div>
+          <div><p className="text-muted-foreground">Total Ordered</p><p className="font-bold">{formatCurrency(po.total_amount)}</p></div>
+          <div><p className="text-muted-foreground">Total Received</p><p className="font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(po.received_amount)}</p></div>
+          <div><p className="text-muted-foreground">Remaining</p><p className="font-bold text-amber-600 dark:text-amber-400">{formatCurrency(po.remaining_amount)}</p></div>
           <div><p className="text-muted-foreground">Receipt Progress</p><p className="font-semibold">{totalReceived} / {totalOrdered} pcs</p></div>
           {po.notes && <div className="col-span-2 sm:col-span-4"><p className="text-muted-foreground">Notes</p><p>{po.notes}</p></div>}
         </CardContent>
@@ -125,8 +127,10 @@ export default function PurchaseOrderDetailPage() {
             </table>
           </div>
           <Separator className="my-3" />
-          <div className="flex justify-end">
-            <p className="font-bold">Total: {formatCurrency(po.total_amount)}</p>
+          <div className="flex flex-wrap justify-end gap-6 text-sm">
+            <div className="text-right"><p className="text-xs text-muted-foreground">Ordered</p><p className="font-bold">{formatCurrency(po.total_amount)}</p></div>
+            <div className="text-right"><p className="text-xs text-muted-foreground">Received</p><p className="font-semibold text-emerald-600 dark:text-emerald-400">{formatCurrency(po.received_amount)}</p></div>
+            <div className="text-right"><p className="text-xs text-muted-foreground">Remaining</p><p className="font-semibold text-amber-600 dark:text-amber-400">{formatCurrency(po.remaining_amount)}</p></div>
           </div>
         </CardContent>
       </Card>

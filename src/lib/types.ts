@@ -171,6 +171,8 @@ export interface PurchaseOrder {
   expected_date: string | null
   received_date: string | null
   total_amount: number
+  received_amount: number
+  remaining_amount: number
   notes: string | null
   supplier?: Supplier
   warehouse?: Warehouse
