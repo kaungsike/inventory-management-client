@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { RoleGuard } from '@/components/auth/RoleGuard'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { STATUS_LABELS, toLabelItems } from '@/lib/labels'
 import type { PurchaseOrder } from '@/lib/types'
 
 export default function PurchaseOrdersPage() {
@@ -68,7 +69,7 @@ export default function PurchaseOrdersPage() {
       />
 
       <div className="flex flex-wrap gap-3">
-        <Select value={status} onValueChange={(v) => { setStatus(v ?? ''); setPage(1) }}>
+        <Select value={status} onValueChange={(v) => { setStatus(v ?? ''); setPage(1) }} items={STATUS_LABELS}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All Status" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Status</SelectItem>
@@ -79,7 +80,7 @@ export default function PurchaseOrdersPage() {
             <SelectItem value="cancelled">Cancelled</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={supplierId} onValueChange={(v) => { setSupplierId(v ?? ''); setPage(1) }}>
+        <Select value={supplierId} onValueChange={(v) => { setSupplierId(v ?? ''); setPage(1) }} items={toLabelItems(suppliers, (s) => s.name)}>
           <SelectTrigger className="w-48"><SelectValue placeholder="All Suppliers" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Suppliers</SelectItem>

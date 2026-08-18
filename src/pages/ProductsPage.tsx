@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { RoleGuard } from '@/components/auth/RoleGuard'
 import { useAuth } from '@/hooks/useAuth'
 import { formatCurrency, calculateStockStatus } from '@/lib/utils'
+import { STATUS_LABELS, toLabelItems } from '@/lib/labels'
 import type { Product } from '@/lib/types'
 
 function StockStatusBadge({ qty, reorderPoint }: { qty?: number; reorderPoint?: number }) {
@@ -127,7 +128,7 @@ export default function ProductsPage() {
           placeholder="Search by name or SKU..."
           className="w-64"
         />
-        <Select value={categoryId} onValueChange={(v) => { setCategoryId(v ?? ''); setPage(1) }}>
+        <Select value={categoryId} onValueChange={(v) => { setCategoryId(v ?? ''); setPage(1) }} items={toLabelItems(categories, (c) => c.name)}>
           <SelectTrigger className="w-44">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
@@ -138,7 +139,7 @@ export default function ProductsPage() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={status} onValueChange={(v) => { setStatus(v ?? ''); setPage(1) }}>
+        <Select value={status} onValueChange={(v) => { setStatus(v ?? ''); setPage(1) }} items={STATUS_LABELS}>
           <SelectTrigger className="w-36">
             <SelectValue placeholder="All Status" />
           </SelectTrigger>

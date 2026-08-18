@@ -9,6 +9,11 @@ interface ReportDateRangeFilterProps {
   onChange: (dateFrom: string, dateTo: string) => void
 }
 
+const PRESET_LABELS: Record<string, string> = {
+  custom: 'Custom Range',
+  ...Object.fromEntries(REPORT_PRESETS.map((p) => [p.value, p.label])),
+}
+
 export function ReportDateRangeFilter({ dateFrom, dateTo, onChange }: ReportDateRangeFilterProps) {
   const [preset, setPreset] = useState<ReportPreset>('custom')
 
@@ -32,7 +37,7 @@ export function ReportDateRangeFilter({ dateFrom, dateTo, onChange }: ReportDate
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Select value={preset} onValueChange={(v) => applyPreset((v ?? 'custom') as ReportPreset)}>
+      <Select value={preset} onValueChange={(v) => applyPreset((v ?? 'custom') as ReportPreset)} items={PRESET_LABELS}>
         <SelectTrigger className="w-40 h-8">
           <SelectValue placeholder="Custom Range" />
         </SelectTrigger>

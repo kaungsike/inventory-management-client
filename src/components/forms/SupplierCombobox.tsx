@@ -2,6 +2,7 @@ import { useAllSuppliers } from '@/hooks/useSuppliers'
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
+import { toLabelItems } from '@/lib/labels'
 
 interface SupplierComboboxProps {
   value: string
@@ -13,7 +14,11 @@ export function SupplierCombobox({ value, onChange, placeholder = 'Select suppli
   const { data: suppliers = [] } = useAllSuppliers()
 
   return (
-    <Select value={value} onValueChange={(v) => onChange(v ?? '')}>
+    <Select
+      value={value}
+      onValueChange={(v) => onChange(v ?? '')}
+      items={toLabelItems(suppliers, (s) => `${s.name}${s.company ? ` (${s.company})` : ''}`)}
+    >
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Tag, Users, Archive,
-  ArrowLeftRight, FileText, ShoppingCart, AlertTriangle, ChevronLeft, ChevronRight, X, ShieldCheck, UserRound, ShoppingBag, BarChart3, LineChart, Calculator, FileClock, PackageX, Undo2
+  ArrowLeftRight, FileText, ShoppingCart, AlertTriangle, ChevronLeft, ChevronRight, X, ShieldCheck, UserRound, ShoppingBag, BarChart3, LineChart, Calculator, FileClock, PackageX, Undo2, Warehouse as WarehouseIcon
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -30,6 +30,7 @@ const navGroups = [
     label: 'Operations',
     items: [
       { label: 'Inventory', to: '/inventory', icon: Archive },
+      { label: 'Warehouses', to: '/warehouses', icon: WarehouseIcon },
       { label: 'Transfer Stock', to: '/inventory/transfer', icon: ArrowLeftRight },
       { label: 'Transactions', to: '/transactions', icon: FileText },
     ],

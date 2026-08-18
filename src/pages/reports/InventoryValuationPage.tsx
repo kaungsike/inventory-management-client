@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { ProductCombobox } from '@/components/forms/ProductCombobox'
 import { formatCurrency } from '@/lib/utils'
+import { toLabelItems } from '@/lib/labels'
 import type { InventoryValuationRow } from '@/lib/types'
 
 export default function InventoryValuationPage() {
@@ -80,14 +81,14 @@ export default function InventoryValuationPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
-        <Select value={warehouseId} onValueChange={(v) => setWarehouseId(v ?? '')}>
+        <Select value={warehouseId} onValueChange={(v) => setWarehouseId(v ?? '')} items={toLabelItems(warehouses, (w) => w.name)}>
           <SelectTrigger className="w-44 h-8"><SelectValue placeholder="All Warehouses" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Warehouses</SelectItem>
             {warehouses.map((w) => <SelectItem key={w.id} value={String(w.id)}>{w.name}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Select value={categoryId} onValueChange={(v) => setCategoryId(v ?? '')}>
+        <Select value={categoryId} onValueChange={(v) => setCategoryId(v ?? '')} items={toLabelItems(categories, (c) => c.name)}>
           <SelectTrigger className="w-44 h-8"><SelectValue placeholder="All Categories" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Categories</SelectItem>

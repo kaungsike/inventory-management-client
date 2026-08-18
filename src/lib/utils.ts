@@ -24,7 +24,7 @@ export function getStatusColor(status: string): 'default' | 'secondary' | 'destr
   switch (status) {
     case 'active': case 'received': case 'shipped': case 'completed': return 'default'
     case 'inactive': case 'cancelled': case 'damage': case 'expired': return 'destructive'
-    case 'discontinued': case 'draft': return 'outline'
+    case 'discontinued': case 'draft': case 'archived': return 'outline'
     case 'sent': case 'partial': case 'confirmed': case 'return_in': return 'secondary'
     default: return 'secondary'
   }

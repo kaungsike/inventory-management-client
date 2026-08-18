@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardAction } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { RoleGuard } from '@/components/auth/RoleGuard'
+import { STATUS_LABELS } from '@/lib/labels'
 import type { Category } from '@/lib/types'
 
 interface CategoryFormData {
@@ -54,7 +55,7 @@ function CategoryForm({ defaultValues, onSubmit, onCancel, loading }: CategoryFo
       </div>
       <div>
         <Label>Status</Label>
-        <Select value={status} onValueChange={(v) => setValue('status', v as 'active' | 'inactive')}>
+        <Select value={status} onValueChange={(v) => setValue('status', v as 'active' | 'inactive')} items={STATUS_LABELS}>
           <SelectTrigger className="w-full mt-1">
             <SelectValue />
           </SelectTrigger>

@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { useAllWarehouses } from '@/hooks/useWarehouses'
 import { RoleGuard } from '@/components/auth/RoleGuard'
+import { toLabelItems } from '@/lib/labels'
 
 interface ReceiveFormData {
   warehouse_id: string
@@ -210,7 +211,7 @@ export default function PurchaseOrderDetailPage() {
                   name="warehouse_id" control={control}
                   rules={{ required: 'Warehouse is required' }}
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select value={field.value} onValueChange={field.onChange} items={toLabelItems(warehouses, (w) => w.name)}>
                       <SelectTrigger className="w-full max-w-xs mt-1"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         {warehouses.map(w => <SelectItem key={w.id} value={String(w.id)}>{w.name}</SelectItem>)}

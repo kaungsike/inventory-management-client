@@ -14,6 +14,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { ProductCombobox } from '@/components/forms/ProductCombobox'
 import { ReportDateRangeFilter } from '@/components/reports/ReportDateRangeFilter'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { STATUS_LABELS, toLabelItems } from '@/lib/labels'
 import type { StockWriteOffRow } from '@/lib/types'
 
 export default function StockWriteOffReportPage() {
@@ -93,14 +94,14 @@ export default function StockWriteOffReportPage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <ReportDateRangeFilter dateFrom={dateFrom} dateTo={dateTo} onChange={(from, to) => { setDateFrom(from); setDateTo(to) }} />
-        <Select value={warehouseId} onValueChange={(v) => setWarehouseId(v ?? '')}>
+        <Select value={warehouseId} onValueChange={(v) => setWarehouseId(v ?? '')} items={toLabelItems(warehouses, (w) => w.name)}>
           <SelectTrigger className="w-44 h-8"><SelectValue placeholder="All Warehouses" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Warehouses</SelectItem>
             {warehouses.map((w) => <SelectItem key={w.id} value={String(w.id)}>{w.name}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Select value={type} onValueChange={(v) => setType(v ?? '')}>
+        <Select value={type} onValueChange={(v) => setType(v ?? '')} items={STATUS_LABELS}>
           <SelectTrigger className="w-40 h-8"><SelectValue placeholder="All Types" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Types</SelectItem>

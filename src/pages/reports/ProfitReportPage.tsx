@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { ReportDateRangeFilter } from '@/components/reports/ReportDateRangeFilter'
 import { formatCurrency } from '@/lib/utils'
+import { toLabelItems } from '@/lib/labels'
 import type { DailySalesRow, MonthlySalesRow } from '@/lib/types'
 
 const monthLabel = (month: string) => {
@@ -77,7 +78,7 @@ export default function ProfitReportPage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <ReportDateRangeFilter dateFrom={dateFrom} dateTo={dateTo} onChange={(from, to) => { setDateFrom(from); setDateTo(to) }} />
-        <Select value={warehouseId} onValueChange={(v) => setWarehouseId(v ?? '')}>
+        <Select value={warehouseId} onValueChange={(v) => setWarehouseId(v ?? '')} items={toLabelItems(warehouses, (w) => w.name)}>
           <SelectTrigger className="w-44 h-8"><SelectValue placeholder="All Warehouses" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Warehouses</SelectItem>

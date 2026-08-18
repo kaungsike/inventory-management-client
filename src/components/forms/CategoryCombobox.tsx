@@ -2,6 +2,7 @@ import { useAllCategories } from '@/hooks/useCategories'
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
+import { toLabelItems } from '@/lib/labels'
 
 interface CategoryComboboxProps {
   value: string
@@ -13,7 +14,11 @@ export function CategoryCombobox({ value, onChange, placeholder = 'Select catego
   const { data: categories = [] } = useAllCategories()
 
   return (
-    <Select value={value} onValueChange={(v) => onChange(v ?? '')}>
+    <Select
+      value={value}
+      onValueChange={(v) => onChange(v ?? '')}
+      items={toLabelItems(categories, (c) => c.name)}
+    >
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

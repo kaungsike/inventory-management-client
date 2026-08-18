@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge'
 import { RoleGuard } from '@/components/auth/RoleGuard'
 import { useAuth } from '@/hooks/useAuth'
 import { calculateStockStatus } from '@/lib/utils'
+import { toLabelItems } from '@/lib/labels'
 import type { Inventory } from '@/lib/types'
 
 function StockBadge({ qty, reorderPoint }: { qty: number; reorderPoint: number }) {
@@ -165,14 +166,14 @@ export default function InventoryPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
-        <Select value={warehouseId} onValueChange={(v) => { setWarehouseId(v ?? ''); setPage(1) }}>
+        <Select value={warehouseId} onValueChange={(v) => { setWarehouseId(v ?? ''); setPage(1) }} items={toLabelItems(warehouses, (w) => w.name)}>
           <SelectTrigger className="w-48"><SelectValue placeholder="All Warehouses" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Warehouses</SelectItem>
             {warehouses.map((w) => <SelectItem key={w.id} value={String(w.id)}>{w.name}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Select value={stockFilter} onValueChange={(v) => { setStockFilter(v ?? ''); setPage(1) }}>
+        <Select value={stockFilter} onValueChange={(v) => { setStockFilter(v ?? ''); setPage(1) }} items={{ low: 'Low Stock Only' }}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All Stock" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Stock</SelectItem>

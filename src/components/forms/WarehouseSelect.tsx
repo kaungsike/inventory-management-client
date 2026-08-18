@@ -2,6 +2,7 @@ import { useAllWarehouses } from '@/hooks/useWarehouses'
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
+import { toLabelItems } from '@/lib/labels'
 
 interface WarehouseSelectProps {
   value: string
@@ -15,7 +16,11 @@ export function WarehouseSelect({ value, onChange, placeholder = 'Select warehou
   const filtered = excludeId ? warehouses.filter(w => w.id !== excludeId) : warehouses
 
   return (
-    <Select value={value} onValueChange={(v) => onChange(v ?? '')}>
+    <Select
+      value={value}
+      onValueChange={(v) => onChange(v ?? '')}
+      items={toLabelItems(filtered, (w) => `${w.name} — ${w.location}`)}
+    >
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

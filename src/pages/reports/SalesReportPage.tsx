@@ -13,6 +13,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { ProductCombobox } from '@/components/forms/ProductCombobox'
 import { ReportDateRangeFilter } from '@/components/reports/ReportDateRangeFilter'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { toLabelItems } from '@/lib/labels'
 import type { SalesReportRow } from '@/lib/types'
 
 export default function SalesReportPage() {
@@ -98,7 +99,7 @@ export default function SalesReportPage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <ReportDateRangeFilter dateFrom={dateFrom} dateTo={dateTo} onChange={(from, to) => { setDateFrom(from); setDateTo(to) }} />
-        <Select value={warehouseId} onValueChange={(v) => setWarehouseId(v ?? '')}>
+        <Select value={warehouseId} onValueChange={(v) => setWarehouseId(v ?? '')} items={toLabelItems(warehouses, (w) => w.name)}>
           <SelectTrigger className="w-44 h-8"><SelectValue placeholder="All Warehouses" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Warehouses</SelectItem>

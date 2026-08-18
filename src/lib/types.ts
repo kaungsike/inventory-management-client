@@ -49,9 +49,24 @@ export interface Warehouse {
   manager_name: string | null
   phone: string | null
   status: 'active' | 'inactive'
+  archived_at: string | null
   inventory_count?: number
+  total_stock?: number
   created_at: string
   updated_at: string
+}
+
+export interface WarehouseDetail extends Warehouse {
+  total_products: number
+  total_units: number
+  inventory_value: number
+  inventory: Inventory[]
+  inventory_meta: {
+    current_page: number
+    last_page: number
+    per_page: number
+    total: number
+  }
 }
 
 export interface Inventory {

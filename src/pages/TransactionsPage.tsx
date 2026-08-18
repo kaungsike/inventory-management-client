@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { formatCurrency, formatDateTime } from '@/lib/utils'
+import { STATUS_LABELS, toLabelItems } from '@/lib/labels'
 import type { InventoryTransaction } from '@/lib/types'
 
 export default function TransactionsPage() {
@@ -92,7 +93,7 @@ export default function TransactionsPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
-        <Select value={type} onValueChange={(v) => { setType(v ?? ''); setPage(1) }}>
+        <Select value={type} onValueChange={(v) => { setType(v ?? ''); setPage(1) }} items={STATUS_LABELS}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All Types" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Types</SelectItem>
@@ -106,7 +107,7 @@ export default function TransactionsPage() {
             <SelectItem value="expired">Expired</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={warehouseId} onValueChange={(v) => { setWarehouseId(v ?? ''); setPage(1) }}>
+        <Select value={warehouseId} onValueChange={(v) => { setWarehouseId(v ?? ''); setPage(1) }} items={toLabelItems(warehouses, (w) => w.name)}>
           <SelectTrigger className="w-44"><SelectValue placeholder="All Warehouses" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Warehouses</SelectItem>

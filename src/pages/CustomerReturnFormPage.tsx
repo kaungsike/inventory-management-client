@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { formatCurrency } from '@/lib/utils'
+import { toLabelItems } from '@/lib/labels'
 
 interface ReturnFormData {
   sales_order_id: string
@@ -133,7 +134,7 @@ export default function CustomerReturnFormPage() {
                 name="sales_order_id" control={control}
                 rules={{ required: 'A shipped sales order is required' }}
                 render={({ field }) => (
-                  <Select value={field.value} onValueChange={(v) => { field.onChange(v); setValue('items', {}) }}>
+                  <Select value={field.value} onValueChange={(v) => { field.onChange(v); setValue('items', {}) }} items={toLabelItems(shippedOrders, (so) => `${so.so_number} — ${so.customer?.name ?? `Customer #${so.customer_id}`}`)}>
                     <SelectTrigger className="w-full mt-1" disabled={isEdit}>
                       <SelectValue placeholder="Select shipped sales order" />
                     </SelectTrigger>

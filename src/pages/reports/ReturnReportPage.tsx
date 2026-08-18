@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { ReportDateRangeFilter } from '@/components/reports/ReportDateRangeFilter'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { toLabelItems } from '@/lib/labels'
 import type { ReturnReportRow } from '@/lib/types'
 
 export default function ReturnReportPage() {
@@ -96,14 +97,14 @@ export default function ReturnReportPage() {
 
       <div className="flex flex-wrap gap-3">
         <ReportDateRangeFilter dateFrom={dateFrom} dateTo={dateTo} onChange={(from, to) => { setDateFrom(from); setDateTo(to) }} />
-        <Select value={warehouseId} onValueChange={(v) => setWarehouseId(v ?? '')}>
+        <Select value={warehouseId} onValueChange={(v) => setWarehouseId(v ?? '')} items={toLabelItems(warehouses, (w) => w.name)}>
           <SelectTrigger className="w-44 h-8"><SelectValue placeholder="All Warehouses" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Warehouses</SelectItem>
             {warehouses.map((w) => <SelectItem key={w.id} value={String(w.id)}>{w.name}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Select value={customerId} onValueChange={(v) => setCustomerId(v ?? '')}>
+        <Select value={customerId} onValueChange={(v) => setCustomerId(v ?? '')} items={toLabelItems(customers, (c) => c.name)}>
           <SelectTrigger className="w-48 h-8"><SelectValue placeholder="All Customers" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Customers</SelectItem>

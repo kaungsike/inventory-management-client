@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { formatCurrency } from '@/lib/utils'
+import { toLabelItems } from '@/lib/labels'
 
 interface LineItem { product_id: string; quantity_ordered: string; unit_price: string }
 interface SOFormData {
@@ -96,7 +97,7 @@ export default function SalesOrderFormPage() {
                 name="customer_id" control={control}
                 rules={{ required: 'Customer is required' }}
                 render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select value={field.value} onValueChange={field.onChange} items={toLabelItems(customers, (c) => c.name)}>
                     <SelectTrigger className="w-full mt-1"><SelectValue placeholder="Select customer" /></SelectTrigger>
                     <SelectContent>
                       {customers.map((c) => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
@@ -113,7 +114,7 @@ export default function SalesOrderFormPage() {
                 name="warehouse_id" control={control}
                 rules={{ required: 'Warehouse is required' }}
                 render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select value={field.value} onValueChange={field.onChange} items={toLabelItems(warehouses, (w) => w.name)}>
                     <SelectTrigger className="w-full mt-1"><SelectValue placeholder="Select warehouse" /></SelectTrigger>
                     <SelectContent>
                       {warehouses.map((w) => <SelectItem key={w.id} value={String(w.id)}>{w.name}</SelectItem>)}
@@ -165,7 +166,7 @@ export default function SalesOrderFormPage() {
                       control={control}
                       rules={{ required: 'Product required' }}
                       render={({ field: f }) => (
-                        <Select value={f.value ?? ''} onValueChange={(v) => v !== null && onProductSelect(v, index)}>
+                        <Select value={f.value ?? ''} onValueChange={(v) => v !== null && onProductSelect(v, index)} items={toLabelItems(products, (p) => `${p.sku} — ${p.name}`)}>
                           <SelectTrigger className="w-full mt-1"><SelectValue placeholder="Select product" /></SelectTrigger>
                           <SelectContent>
                             {products.map((p) => (

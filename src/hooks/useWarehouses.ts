@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { inventoryApi } from '@/lib/api'
-import type { Warehouse, PaginatedResponse } from '@/lib/types'
+import type { Warehouse, WarehouseDetail, PaginatedResponse } from '@/lib/types'
 import { toast } from 'sonner'
 
 interface WarehouseFilters { search?: string; status?: string; page?: number }
@@ -19,9 +19,20 @@ export function useAllWarehouses() {
   return useQuery<Warehouse[]>({
     queryKey: ['warehouses', 'all'],
     queryFn: async () => {
-      const { data } = await inventoryApi.get('/warehouses', { params: { per_page: 100 } })
+      const { data } = await inventoryApi.get('/warehouses', { params: { status: 'active', per_page: 100 } })
       return data.data
     },
+  })
+}
+
+export function useWarehouseDetail(id: number | null) {
+  return useQuery<WarehouseDetail>({
+    queryKey: ['warehouses', id],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get(`/warehouses/${id}`)
+      return data.data
+    },
+    enabled: id !== null,
   })
 }
 
@@ -40,10 +51,15 @@ export function useWarehouseMutation() {
     onSuccess: () => { toast.success('Warehouse updated'); invalidate() },
   })
 
-  const remove = useMutation({
-    mutationFn: (id: number) => inventoryApi.delete(`/warehouses/${id}`),
-    onSuccess: () => { toast.success('Warehouse deleted'); invalidate() },
+  const archive = useMutation({
+    mutationFn: (id: number) => inventoryApi.post(`/warehouses/${id}/archive`),
+    onSuccess: () => { toast.success('Warehouse archived'); invalidate() },
   })
 
-  return { create, update, remove }
+  const restore = useMutation({
+    mutationFn: (id: number) => inventoryApi.post(`/warehouses/${id}/restore`),
+    onSuccess: () => { toast.success('Warehouse restored'); invalidate() },
+  })
+
+  return { create, update, archive, restore }
 }

@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { RoleGuard } from '@/components/auth/RoleGuard'
 import { useAuth } from '@/hooks/useAuth'
+import { STATUS_LABELS } from '@/lib/labels'
 import type { Customer } from '@/lib/types'
 
 interface CustomerFormData {
@@ -67,7 +68,7 @@ function CustomerForm({ defaultValues, onSubmit, onCancel, loading, isEdit }: {
       </div>
       <div>
         <Label>Status</Label>
-        <Select value={status} onValueChange={(v) => setValue('status', v as 'active' | 'inactive')}>
+        <Select value={status} onValueChange={(v) => setValue('status', v as 'active' | 'inactive')} items={STATUS_LABELS}>
           <SelectTrigger className="w-full mt-1">
             <SelectValue />
           </SelectTrigger>

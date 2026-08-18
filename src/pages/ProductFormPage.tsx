@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Link } from 'react-router-dom'
 import { generateSKU } from '@/lib/utils'
+import { STATUS_LABELS } from '@/lib/labels'
 
 interface ProductFormData {
   name: string; sku: string; description: string
@@ -168,7 +169,7 @@ export default function ProductFormPage() {
                 name="status"
                 control={control}
                 render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select value={field.value} onValueChange={field.onChange} items={STATUS_LABELS}>
                     <SelectTrigger className="w-full mt-1"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="active">Active</SelectItem>

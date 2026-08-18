@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { RoleGuard } from '@/components/auth/RoleGuard'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { STATUS_LABELS, toLabelItems } from '@/lib/labels'
 import type { SalesOrder } from '@/lib/types'
 
 export default function SalesOrdersPage() {
@@ -68,7 +69,7 @@ export default function SalesOrdersPage() {
       />
 
       <div className="flex flex-wrap gap-3">
-        <Select value={status} onValueChange={(v) => { setStatus(v ?? ''); setPage(1) }}>
+        <Select value={status} onValueChange={(v) => { setStatus(v ?? ''); setPage(1) }} items={STATUS_LABELS}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All Status" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Status</SelectItem>
@@ -78,7 +79,7 @@ export default function SalesOrdersPage() {
             <SelectItem value="cancelled">Cancelled</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={customerId} onValueChange={(v) => { setCustomerId(v ?? ''); setPage(1) }}>
+        <Select value={customerId} onValueChange={(v) => { setCustomerId(v ?? ''); setPage(1) }} items={toLabelItems(customers, (c) => c.name)}>
           <SelectTrigger className="w-48"><SelectValue placeholder="All Customers" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Customers</SelectItem>
