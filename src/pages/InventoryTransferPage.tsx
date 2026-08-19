@@ -1,8 +1,8 @@
+import { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { ArrowRight, ArrowLeft } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useInventoryTransfer } from '@/hooks/useInventory'
-import { useInventory } from '@/hooks/useInventory'
+import { useInventoryTransfer, useInventory, useInventoryAvailability } from '@/hooks/useInventory'
 import { PageHeader } from '@/components/common/PageHeader'
 import { WarehouseSelect } from '@/components/forms/WarehouseSelect'
 import { ProductCombobox } from '@/components/forms/ProductCombobox'
@@ -24,28 +24,46 @@ export default function InventoryTransferPage() {
   const navigate = useNavigate()
   const transfer = useInventoryTransfer()
 
-  const { register, handleSubmit, control, watch, formState: { errors } } = useForm<TransferFormData>({
+  const { register, handleSubmit, control, watch, setValue, formState: { errors } } = useForm<TransferFormData>({
     defaultValues: { product_id: '', from_warehouse_id: '', to_warehouse_id: '', quantity: '', notes: '' },
   })
 
   const [productId, fromWarehouseId] = watch(['product_id', 'from_warehouse_id'])
+  const productIdNum = productId ? Number(productId) : undefined
+  const fromWarehouseIdNum = fromWarehouseId ? Number(fromWarehouseId) : undefined
+  const availabilityEnabled = Boolean(productIdNum && fromWarehouseIdNum)
 
   const { data: inventoryData } = useInventory({
-    product_id: productId ? Number(productId) : undefined,
-    warehouse_id: fromWarehouseId ? Number(fromWarehouseId) : undefined,
+    product_id: productIdNum,
+    warehouse_id: fromWarehouseIdNum,
   })
-  const currentInventory = inventoryData?.data?.[0]
-  const availableQty = currentInventory?.available_quantity ?? 0
+  const unit = inventoryData?.data?.[0]?.product?.unit ?? 'units'
+
+  const availability = useInventoryAvailability(productIdNum, fromWarehouseIdNum)
+  const availableQty = availability.data?.available_quantity ?? 0
+
+  // A new product or source warehouse invalidates any previously typed quantity.
+  useEffect(() => {
+    setValue('quantity', '')
+  }, [productId, fromWarehouseId, setValue])
 
   const onSubmit = async (data: TransferFormData) => {
-    await transfer.mutateAsync({
-      product_id: Number(data.product_id),
-      from_warehouse_id: Number(data.from_warehouse_id),
-      to_warehouse_id: Number(data.to_warehouse_id),
-      quantity: Number(data.quantity),
-      notes: data.notes || undefined,
-    })
-    navigate('/inventory')
+    try {
+      await transfer.mutateAsync({
+        product_id: Number(data.product_id),
+        from_warehouse_id: Number(data.from_warehouse_id),
+        to_warehouse_id: Number(data.to_warehouse_id),
+        quantity: Number(data.quantity),
+        notes: data.notes || undefined,
+      })
+      navigate('/inventory')
+    } catch {
+      // The interceptor has already surfaced the server error; refresh the
+      // stock figure so the form reflects the current reality.
+      if (availabilityEnabled) {
+        availability.refetch()
+      }
+    }
   }
 
   return (
@@ -90,8 +108,14 @@ export default function InventoryTransferPage() {
                   )}
                 />
                 {errors.from_warehouse_id && <p className="text-xs text-destructive mt-1">{errors.from_warehouse_id.message}</p>}
-                {currentInventory && (
-                  <p className="text-xs text-muted-foreground mt-1">Available: {availableQty} {currentInventory.product?.unit}</p>
+                {availabilityEnabled && availability.isFetching && (
+                  <p className="text-xs text-muted-foreground mt-1">Checking stock…</p>
+                )}
+                {availabilityEnabled && !availability.isFetching && availableQty > 0 && (
+                  <p className="text-xs text-muted-foreground mt-1">Available: {availableQty} {unit}</p>
+                )}
+                {availabilityEnabled && !availability.isFetching && availableQty === 0 && (
+                  <p className="text-xs text-destructive mt-1">No stock available in this warehouse.</p>
                 )}
               </div>
 
@@ -124,11 +148,16 @@ export default function InventoryTransferPage() {
               <Label>Quantity *</Label>
               <Input
                 type="number"
+                disabled={availabilityEnabled && availableQty === 0}
                 {...register('quantity', {
                   required: 'Quantity is required',
                   min: { value: 1, message: 'Minimum 1' },
-                  max: availableQty > 0 ? { value: availableQty, message: `Max available: ${availableQty}` } : undefined,
-                  validate: (v) => Number(v) > 0 || 'Must be greater than 0',
+                  max: availableQty > 0 ? { value: availableQty, message: `Quantity cannot exceed available stock (${availableQty}).` } : undefined,
+                  validate: (v) => {
+                    const n = Number(v)
+                    if (availabilityEnabled && availableQty === 0 && n > 0) return 'Insufficient stock. Available quantity: 0.'
+                    return n > 0 || 'Must be greater than 0'
+                  },
                 })}
                 className="mt-1"
               />
@@ -146,7 +175,7 @@ export default function InventoryTransferPage() {
           <Link to="/inventory">
             <Button type="button" variant="outline">Cancel</Button>
           </Link>
-          <Button type="submit" disabled={transfer.isPending}>
+          <Button type="submit" disabled={transfer.isPending || (availabilityEnabled && availableQty === 0)}>
             {transfer.isPending ? 'Transferring...' : (
               <><ArrowRight className="size-4 mr-2" />Transfer Stock</>
             )}

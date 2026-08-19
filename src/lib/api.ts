@@ -42,9 +42,12 @@ inventoryApi.interceptors.response.use(
     } else if (status === 403) {
       toast.error(message || "You don't have permission to perform this action")
     } else if (status === 422) {
-      // Validation / business-rule rejections: surface the server message
-      // (field-level mapping is not wired up in the current forms).
-      toast.error(message)
+      // Validation / business-rule rejections: prefer the first field-level
+      // error detail so users see the actionable message (e.g. "No stock is
+      // available for this product in the selected source warehouse.").
+      const fieldErrors = error.response?.data?.errors
+      const first = fieldErrors ? (Object.values(fieldErrors).flat()[0] as string | undefined) : undefined
+      toast.error(typeof first === 'string' ? first : message)
     } else {
       toast.error(message)
     }

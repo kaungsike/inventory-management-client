@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { inventoryApi } from '@/lib/api'
-import type { Inventory, PaginatedResponse } from '@/lib/types'
+import type { Inventory, InventoryAvailability, PaginatedResponse } from '@/lib/types'
 import { toast } from 'sonner'
 
 interface InventoryFilters { warehouse_id?: number; product_id?: number; low_stock?: boolean; page?: number; per_page?: number }
@@ -13,6 +13,19 @@ export function useInventory(filters: InventoryFilters = {}) {
       const { data } = await inventoryApi.get('/inventory', { params })
       return data
     },
+  })
+}
+
+export function useInventoryAvailability(productId?: number, warehouseId?: number) {
+  return useQuery<InventoryAvailability>({
+    queryKey: ['inventory', 'available', productId, warehouseId],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/inventory/available', {
+        params: { product_id: productId, warehouse_id: warehouseId },
+      })
+      return data
+    },
+    enabled: Boolean(productId && warehouseId),
   })
 }
 

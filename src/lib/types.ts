@@ -87,6 +87,14 @@ export interface Inventory {
   updated_at: string
 }
 
+export interface InventoryAvailability {
+  product_id: number
+  warehouse_id: number
+  quantity: number
+  reserved_quantity: number
+  available_quantity: number
+}
+
 export interface InventoryTransaction {
   id: number
   product_id: number
