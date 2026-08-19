@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Plus, Edit2, Trash2, Package } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useProducts, useProductMutation } from '@/hooks/useProducts'
@@ -37,6 +37,7 @@ export default function ProductsPage() {
   const [status, setStatus] = useState<string>('')
   const [page, setPage] = useState(1)
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
+  const navigate = useNavigate()
 
   const { isAdmin, isManager } = useAuth()
   const showActionsColumn = isAdmin || isManager
@@ -158,7 +159,7 @@ export default function ProductsPage() {
         <EmptyState
           icon={Package}
           title="No products found"
-          action={{ label: 'Add Product', onClick: () => {} }}
+          action={{ label: 'Add Product', onClick: () => navigate('/products/new') }}
         />
       ) : (
         <>

@@ -22,10 +22,6 @@ export function DocPage({ meta, pathFn = docPath, getNeighbors = getDocNeighbors
   const neighbors = getNeighbors(meta.slug)
 
   useEffect(() => {
-    window.scrollTo({ top: 0 })
-  }, [location.pathname])
-
-  useEffect(() => {
     const article = articleRef.current
     if (!article) {
       setHeadings([])

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Plus, Eye, Trash2, ShoppingCart } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { usePurchaseOrders, usePurchaseOrderMutation } from '@/hooks/usePurchaseOrders'
@@ -22,6 +22,7 @@ export default function PurchaseOrdersPage() {
   const [supplierId, setSupplierId] = useState('')
   const [page, setPage] = useState(1)
   const [deleteTarget, setDeleteTarget] = useState<PurchaseOrder | null>(null)
+  const navigate = useNavigate()
 
   const { data, isLoading } = usePurchaseOrders({
     status: status || undefined,
@@ -91,7 +92,7 @@ export default function PurchaseOrdersPage() {
 
       {isLoading ? <LoadingSpinner className="min-h-[200px]" /> :
         !data?.data?.length ? <EmptyState icon={ShoppingCart} title="No purchase orders found"
-          action={{ label: 'Create PO', onClick: () => {} }} /> : (
+          action={{ label: 'Create PO', onClick: () => navigate('/purchase-orders/new') }} /> : (
           <>
             <DataTable data={data.data} columns={columns} />
             {data.meta && <TablePagination currentPage={data.meta.current_page} lastPage={data.meta.last_page} total={data.meta.total} onPageChange={setPage} />}

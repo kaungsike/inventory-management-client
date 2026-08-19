@@ -32,7 +32,6 @@ export interface Product {
   cost_price: number
   average_cost: number
   unit: string
-  image: string | null
   status: 'active' | 'inactive' | 'discontinued'
   category?: Category
   supplier?: Supplier

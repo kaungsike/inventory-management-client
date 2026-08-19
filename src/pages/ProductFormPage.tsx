@@ -21,7 +21,7 @@ interface ProductFormData {
   name: string; sku: string; description: string
   category_id: string; supplier_id: string
   unit_price: string; cost_price: string; unit: string
-  image: string; status: string
+  status: string
 }
 
 export default function ProductFormPage() {
@@ -37,7 +37,7 @@ export default function ProductFormPage() {
     defaultValues: {
       name: '', sku: '', description: '', category_id: '',
       supplier_id: '', unit_price: '', cost_price: '',
-      unit: 'pcs', image: '', status: 'active',
+      unit: 'pcs', status: 'active',
     },
   })
 
@@ -52,7 +52,6 @@ export default function ProductFormPage() {
         unit_price: String(product.unit_price),
         cost_price: String(product.cost_price),
         unit: product.unit,
-        image: product.image ?? '',
         status: product.status,
       })
     }
@@ -179,11 +178,6 @@ export default function ProductFormPage() {
                   </Select>
                 )}
               />
-            </div>
-
-            <div>
-              <Label>Image URL</Label>
-              <Input {...register('image')} placeholder="https://..." className="mt-1" />
             </div>
 
             <div className="sm:col-span-2">
