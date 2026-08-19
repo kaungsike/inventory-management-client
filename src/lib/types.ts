@@ -343,6 +343,61 @@ export interface ReportFilters {
   customer_id?: number
 }
 
+export interface FinancialOverviewPurchase {
+  total_spend: number
+  ordered_amount: number
+  received_amount: number
+  remaining_amount: number
+  total_pos: number
+  total_ordered_units: number
+  total_received_units: number
+}
+
+export interface FinancialOverviewInventory {
+  units: number
+  value: number
+  potential_sales_value: number
+  potential_gross_profit: number
+}
+
+export interface FinancialOverviewSales {
+  gross_sales: number
+  return_value: number
+  net_sales: number
+}
+
+export interface FinancialOverviewCost {
+  sales_cogs: number
+  returned_cogs: number
+  net_cogs: number
+}
+
+export interface FinancialOverviewProfit {
+  gross_profit: number
+  write_off_loss: number
+  result_after_write_offs: number
+}
+
+export interface FinancialOverviewWriteOffs {
+  damage_quantity: number
+  expired_quantity: number
+  total_quantity: number
+  damage_loss: number
+  expired_loss: number
+  total_loss: number
+}
+
+export interface FinancialOverview {
+  purchase: FinancialOverviewPurchase
+  inventory: FinancialOverviewInventory
+  sales: FinancialOverviewSales
+  cost: FinancialOverviewCost
+  profit: FinancialOverviewProfit
+  write_offs: FinancialOverviewWriteOffs
+}
+
+export type FinancialOverviewFilters = ReportFilters
+
 export interface PaginatedResponse<T> {
   data: T[]
   meta: {

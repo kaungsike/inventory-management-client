@@ -39,7 +39,9 @@ export default function WriteOffReportsPage() {
         See <Link to="/docs/damage-expired" className="font-medium text-primary underline underline-offset-4">
           Damage &amp; Expired Stock
         </Link>{' '}
-        for how write-offs are recorded.
+        for how write-offs are recorded, and{' '}
+        <Link to="/docs/financial-overview" className="font-medium text-primary underline underline-offset-4">Financial Overview</Link>{' '}
+        for how the loss is applied to the result after write-offs.
       </DocsCallout>
     </DocPage>
   )

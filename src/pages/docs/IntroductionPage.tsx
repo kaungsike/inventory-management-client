@@ -26,7 +26,7 @@ export default function IntroductionPage() {
         <LI><Strong>Inventory</Strong> — per-warehouse stock levels, transfers, adjustments, and write-offs.</LI>
         <LI><Strong>Returns</Strong> — customer returns that restore stock and reverse revenue.</LI>
         <LI><Strong>Stock movements</Strong> — every change recorded in an append-only transaction ledger.</LI>
-        <LI><Strong>Financial reports</Strong> — sales, COGS, gross profit, inventory valuation, returns, and write-offs.</LI>
+        <LI><Strong>Financial reports</Strong> — sales, COGS, gross profit, inventory valuation, returns, write-offs, and a financial overview.</LI>
       </UL>
 
       <H2>Why the design matters</H2>

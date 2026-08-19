@@ -38,7 +38,9 @@ export default function InventoryValuationPage() {
 
       <DocsCallout variant="note" title="Related reading">
         See <Link to="/docs/wac" className="font-medium text-primary underline underline-offset-4">WAC &amp; Valuation</Link> for how the
-        average cost is maintained.
+        average cost is maintained, and{' '}
+        <Link to="/docs/financial-overview" className="font-medium text-primary underline underline-offset-4">Financial Overview</Link>{' '}
+        for how this value sits alongside purchase spend and profit.
       </DocsCallout>
     </DocPage>
   )

@@ -953,6 +953,17 @@ export const API_SECTIONS: ApiSection[] = [
         params: ['date_from, date_to', 'customer_id', 'warehouse_id'],
         managerScope: 'Managers are scoped to their assigned warehouse.',
       },
+      {
+        method: 'GET',
+        path: `${BASE}/reports/financial-overview`,
+        title: 'Financial overview',
+        auth: AUTH_TOKEN,
+        roles: ADMIN_MANAGER,
+        description:
+          'Purchase spend, current inventory value, sales, COGS, gross profit, write-off loss, and the result after write-offs.',
+        params: ['date_from, date_to', 'warehouse_id', 'category_id', 'product_id'],
+        managerScope: 'Managers are scoped to their assigned warehouse.',
+      },
     ],
   },
   {

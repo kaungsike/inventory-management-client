@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { inventoryApi } from '@/lib/api'
 import type {
+  FinancialOverview,
+  FinancialOverviewFilters,
   InventoryValuation,
   ProfitReport,
   ReportFilters,
@@ -68,6 +70,16 @@ export function useReturnReport(filters: { date_from?: string; date_to?: string;
     queryKey: ['reports', 'returns', filters],
     queryFn: async () => {
       const { data } = await inventoryApi.get('/reports/returns', { params: filters })
+      return data
+    },
+  })
+}
+
+export function useFinancialOverview(filters: FinancialOverviewFilters = {}) {
+  return useQuery<FinancialOverview>({
+    queryKey: ['reports', 'financial-overview', filters],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/reports/financial-overview', { params: filters })
       return data
     },
   })

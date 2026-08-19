@@ -52,7 +52,7 @@ export default function SystemOverviewPage() {
       <H2>Financial reports</H2>
       <P>
         All reports read the historical ledger rather than live inventory. They are restricted to admins and managers:
-        sales, profit, inventory valuation, write-offs, and returns.
+        sales, profit, inventory valuation, write-offs, returns, and the financial overview.
       </P>
 
       <H2>Administration</H2>

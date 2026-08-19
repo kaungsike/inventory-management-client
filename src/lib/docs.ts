@@ -224,6 +224,14 @@ export const DOC_GROUPS: DocGroup[] = [
         group: 'Financial',
         keywords: ['write off', 'write-off report', 'damage', 'expired', 'loss value'],
       },
+      {
+        slug: 'financial-overview',
+        title: 'Financial Overview',
+        description:
+          'One page tying purchase spend, current inventory value, write-off losses and sales profit together.',
+        group: 'Financial',
+        keywords: ['financial overview', 'overview', 'purchase spend', 'result after write-offs', 'profit'],
+      },
     ],
   },
   {

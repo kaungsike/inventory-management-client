@@ -36,6 +36,7 @@ const GrossProfitPage = lazy(() => import('@/pages/docs/GrossProfitPage'))
 const InventoryValuationPage = lazy(() => import('@/pages/docs/InventoryValuationPage'))
 const ReturnsFinancialPage = lazy(() => import('@/pages/docs/ReturnsFinancialPage'))
 const WriteOffReportsPage = lazy(() => import('@/pages/docs/WriteOffReportsPage'))
+const FinancialOverviewPage = lazy(() => import('@/pages/docs/FinancialOverviewPage'))
 const UserManagementPage = lazy(() => import('@/pages/docs/UserManagementPage'))
 const WarehouseManagementPage = lazy(() => import('@/pages/docs/WarehouseManagementPage'))
 const ManagerAssignmentPage = lazy(() => import('@/pages/docs/ManagerAssignmentPage'))
@@ -102,6 +103,7 @@ const publicRoute = [
           { path: 'inventory-valuation', element: lazyPage(InventoryValuationPage) },
           { path: 'returns-financial', element: lazyPage(ReturnsFinancialPage) },
           { path: 'write-off-reports', element: lazyPage(WriteOffReportsPage) },
+          { path: 'financial-overview', element: lazyPage(FinancialOverviewPage) },
           { path: 'user-management', element: lazyPage(UserManagementPage) },
           { path: 'warehouse-management', element: lazyPage(WarehouseManagementPage) },
           { path: 'manager-assignment', element: lazyPage(ManagerAssignmentPage) },
