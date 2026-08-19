@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
 import { BookOpenIcon, MenuIcon } from 'lucide-react'
 
 import { DocsContext } from './docs-context'
@@ -21,11 +21,18 @@ const GUIDE_GROUPS = [{ label: 'Guides', items: GUIDE_PAGES }]
 export function GuideLayout() {
   const [headings, setHeadings] = useState<DocHeading[]>([])
   const [mobileOpen, setMobileOpen] = useState(false)
+  const mainRef = useRef<HTMLElement>(null)
+  const location = useLocation()
+
+  useEffect(() => {
+    if (location.hash) return
+    mainRef.current?.scrollTo({ top: 0, left: 0 })
+  }, [location.pathname, location.hash])
 
   return (
     <DocsContext.Provider value={{ headings, setHeadings }}>
-      <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mb-6 flex items-center justify-between gap-4 border-b border-border pb-4">
+      <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 lg:flex lg:h-[calc(100vh-4rem)] lg:flex-col lg:px-8">
+        <div className="mb-6 flex shrink-0 items-center justify-between gap-4 border-b border-border pb-4">
           <div className="flex items-center gap-3">
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger
@@ -56,14 +63,12 @@ export function GuideLayout() {
           </div>
         </div>
 
-        <div className="flex gap-10">
-          <aside className="hidden w-52 shrink-0 lg:block">
-            <div className="sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto pb-6">
-              <DocsSidebar groups={GUIDE_GROUPS} pathFn={guidePath} />
-            </div>
+        <div className="flex min-h-0 flex-1 gap-10">
+          <aside className="hidden w-52 shrink-0 lg:block lg:overflow-y-auto lg:pb-6">
+            <DocsSidebar groups={GUIDE_GROUPS} pathFn={guidePath} />
           </aside>
 
-          <main className="min-w-0 flex-1 pb-16">
+          <main ref={mainRef} className="min-w-0 flex-1 pb-16 lg:overflow-y-auto">
             <Outlet />
           </main>
         </div>
