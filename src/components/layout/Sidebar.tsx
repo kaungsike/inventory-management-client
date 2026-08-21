@@ -1,83 +1,110 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from "react-router-dom"
 import {
-  LayoutDashboard, Package, Tag, Users, Archive,
-  ArrowLeftRight, FileText, ShoppingCart, AlertTriangle, ChevronLeft, ChevronRight, X, ShieldCheck, UserRound, ShoppingBag, BarChart3, LineChart, Calculator, FileClock, PackageX, Undo2, Wallet, Warehouse as WarehouseIcon
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { useLowStockInventory } from '@/hooks/useInventory'
-import { useAppStore } from '@/store/useAppStore'
-import { useAuth } from '@/hooks/useAuth'
+  LayoutDashboard,
+  Package,
+  Tag,
+  Users,
+  Archive,
+  ArrowLeftRight,
+  FileText,
+  ShoppingCart,
+  AlertTriangle,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  ShieldCheck,
+  UserRound,
+  ShoppingBag,
+  BarChart3,
+  LineChart,
+  Calculator,
+  FileClock,
+  PackageX,
+  Undo2,
+  Wallet,
+  Warehouse as WarehouseIcon,
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { useLowStockInventory } from "@/hooks/useInventory"
+import { useAppStore } from "@/store/useAppStore"
+import { useAuth } from "@/hooks/useAuth"
 
 const navGroups = [
   {
-    label: 'Overview',
+    label: "Overview",
+    items: [{ label: "Dashboard", to: "/dashboard", icon: LayoutDashboard }],
+  },
+  {
+    label: "Catalog",
     items: [
-      { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
+      { label: "Products", to: "/products", icon: Package },
+      { label: "Categories", to: "/categories", icon: Tag },
+      { label: "Suppliers", to: "/suppliers", icon: Users },
+      { label: "Customers", to: "/customers", icon: UserRound },
     ],
   },
   {
-    label: 'Catalog',
+    label: "Operations",
     items: [
-      { label: 'Products', to: '/products', icon: Package },
-      { label: 'Categories', to: '/categories', icon: Tag },
-      { label: 'Suppliers', to: '/suppliers', icon: Users },
-      { label: 'Customers', to: '/customers', icon: UserRound },
+      { label: "Inventory", to: "/inventory", icon: Archive },
+      { label: "Warehouses", to: "/warehouses", icon: WarehouseIcon },
+      {
+        label: "Transfer Stock",
+        to: "/inventory/transfer",
+        icon: ArrowLeftRight,
+      },
+      { label: "Transactions", to: "/transactions", icon: FileText },
     ],
   },
   {
-    label: 'Operations',
+    label: "Sales",
     items: [
-      { label: 'Inventory', to: '/inventory', icon: Archive },
-      { label: 'Warehouses', to: '/warehouses', icon: WarehouseIcon },
-      { label: 'Transfer Stock', to: '/inventory/transfer', icon: ArrowLeftRight },
-      { label: 'Transactions', to: '/transactions', icon: FileText },
+      { label: "Sales Orders", to: "/sales-orders", icon: ShoppingBag },
+      { label: "Customer Returns", to: "/customer-returns", icon: Undo2 },
     ],
   },
   {
-    label: 'Sales',
+    label: "Procurement",
     items: [
-      { label: 'Sales Orders', to: '/sales-orders', icon: ShoppingBag },
-      { label: 'Customer Returns', to: '/customer-returns', icon: Undo2 },
+      { label: "Purchase Orders", to: "/purchase-orders", icon: ShoppingCart },
     ],
   },
   {
-    label: 'Procurement',
+    label: "Reports",
     items: [
-      { label: 'Purchase Orders', to: '/purchase-orders', icon: ShoppingCart },
+      { label: "Sales Report", to: "/reports/sales", icon: BarChart3 },
+      { label: "Profit Report", to: "/reports/profit", icon: LineChart },
+      {
+        label: "Inventory Valuation",
+        to: "/reports/inventory-valuation",
+        icon: Calculator,
+      },
+      { label: "Stock Write-Off", to: "/reports/write-off", icon: PackageX },
+      { label: "Customer Returns", to: "/reports/returns", icon: Undo2 },
+      {
+        label: "Financial Overview",
+        to: "/reports/financial-overview",
+        icon: Wallet,
+      },
     ],
   },
   {
-    label: 'Reports',
+    label: "Alerts",
     items: [
-      { label: 'Sales Report', to: '/reports/sales', icon: BarChart3 },
-      { label: 'Profit Report', to: '/reports/profit', icon: LineChart },
-      { label: 'Inventory Valuation', to: '/reports/inventory-valuation', icon: Calculator },
-      { label: 'Stock Write-Off', to: '/reports/write-off', icon: PackageX },
-      { label: 'Customer Returns', to: '/reports/returns', icon: Undo2 },
-      { label: 'Financial Overview', to: '/reports/financial-overview', icon: Wallet },
+      { label: "Low Stock Alerts", to: "/low-stock", icon: AlertTriangle },
     ],
   },
   {
-    label: 'Alerts',
-    items: [
-      { label: 'Low Stock Alerts', to: '/low-stock', icon: AlertTriangle },
-    ],
-  },
-  {
-    label: 'Audit',
-    items: [
-      { label: 'Activity Log', to: '/activity-logs', icon: FileClock },
-    ],
+    label: "Audit",
+    items: [{ label: "Activity Log", to: "/activity-logs", icon: FileClock }],
   },
 ]
 
 const adminNavGroup = {
-  label: 'Administration',
-  items: [
-    { label: 'User Management', to: '/users', icon: ShieldCheck },
-  ],
+  label: "Administration",
+  items: [{ label: "User Management", to: "/users", icon: ShieldCheck }],
 }
 
 interface SidebarProps {
@@ -99,32 +126,55 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
   return (
     <aside
       className={cn(
-        'flex flex-col bg-card border-r border-border transition-all duration-300 h-full',
-        collapsed ? 'w-16' : 'w-64'
+        "flex h-full flex-col border-r border-border bg-card transition-all duration-300",
+        collapsed ? "w-16" : "w-64"
       )}
     >
       {/* Header */}
-      <div className={cn('flex items-center h-16 px-4 border-b border-border', collapsed ? 'justify-center' : 'justify-between')}>
+      <div
+        className={cn(
+          "flex h-16 items-center border-b border-border px-4",
+          collapsed ? "justify-center" : "justify-between"
+        )}
+      >
         {!collapsed && (
-          <span className="font-semibold text-foreground text-sm">Inventory MS</span>
+          <Link to="/">
+            <span className="text-sm font-semibold text-foreground">
+              Inventory MS
+            </span>
+          </Link>
         )}
         {mobile ? (
-          <Button variant="ghost" size="sm" onClick={onClose} className="ml-auto">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="ml-auto"
+          >
             <X className="size-4" />
           </Button>
         ) : (
-          <Button variant="ghost" size="sm" onClick={toggleSidebar} className={cn(collapsed && 'mx-auto')}>
-            {collapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleSidebar}
+            className={cn(collapsed && "mx-auto")}
+          >
+            {collapsed ? (
+              <ChevronRight className="size-4" />
+            ) : (
+              <ChevronLeft className="size-4" />
+            )}
           </Button>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-4">
+      <nav className="flex-1 space-y-4 overflow-y-auto px-2 py-4">
         {displayNavGroups.map((group) => (
           <div key={group.label}>
             {!collapsed && (
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-2 mb-1">
+              <p className="mb-1 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
                 {group.label}
               </p>
             )}
@@ -135,14 +185,16 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
                 const matchingItems = allItems.filter(
                   (i) =>
                     location.pathname === i.to ||
-                    (i.to !== '/dashboard' && location.pathname.startsWith(i.to + '/'))
+                    (i.to !== "/dashboard" &&
+                      location.pathname.startsWith(i.to + "/"))
                 )
                 const bestMatch = matchingItems.reduce<typeof item | null>(
-                  (prev, curr) => (!prev || curr.to.length > prev.to.length ? curr : prev),
+                  (prev, curr) =>
+                    !prev || curr.to.length > prev.to.length ? curr : prev,
                   null
                 )
                 const isActive = bestMatch?.to === item.to
-                const isLowStock = item.to === '/low-stock'
+                const isLowStock = item.to === "/low-stock"
 
                 return (
                   <li key={item.to}>
@@ -150,11 +202,11 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
                       to={item.to}
                       onClick={mobile ? onClose : undefined}
                       className={cn(
-                        'flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm transition-colors',
+                        "flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm transition-colors",
                         isActive
-                          ? 'bg-primary text-primary-foreground font-medium'
-                          : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-                        collapsed && 'justify-center px-0'
+                          ? "bg-primary font-medium text-primary-foreground"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                        collapsed && "justify-center px-0"
                       )}
                     >
                       <item.icon className="size-4 shrink-0" />
@@ -162,7 +214,10 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
                         <>
                           <span className="flex-1">{item.label}</span>
                           {isLowStock && lowStockCount > 0 && (
-                            <Badge variant="destructive" className="text-xs px-1.5 py-0 h-4">
+                            <Badge
+                              variant="destructive"
+                              className="h-4 px-1.5 py-0 text-xs"
+                            >
                               {lowStockCount}
                             </Badge>
                           )}
