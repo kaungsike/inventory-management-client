@@ -14,6 +14,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { ProductCombobox } from '@/components/forms/ProductCombobox'
 import { ReportDateRangeFilter } from '@/components/reports/ReportDateRangeFilter'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { downloadCsv, csvDate, csvNumber } from '@/lib/csv'
 import { STATUS_LABELS, toLabelItems } from '@/lib/labels'
 import type { StockWriteOffRow } from '@/lib/types'
 
@@ -38,25 +39,18 @@ export default function StockWriteOffReportPage() {
 
   const exportCSV = () => {
     const headers = ['Date', 'Product', 'SKU', 'Warehouse', 'Type', 'Quantity', 'Unit Cost', 'Value', 'Reason']
-    const csvRows = [
-      headers.join(','),
-      ...rows.map((row) => [
-        formatDate(row.transaction_date),
-        row.product_name.replace(/,/g, ';'),
-        row.product_sku,
-        row.warehouse_name ?? '',
-        row.type,
-        row.quantity,
-        row.unit_cost,
-        row.value,
-        (row.reason ?? '').replace(/,/g, ';'),
-      ].join(',')),
-    ]
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url; a.download = 'write-off-report.csv'; a.click()
-    URL.revokeObjectURL(url)
+    const dataRows = rows.map((row) => [
+      csvDate(row.transaction_date),
+      row.product_name,
+      row.product_sku,
+      row.warehouse_name ?? '',
+      row.type,
+      csvNumber(row.quantity),
+      csvNumber(row.unit_cost),
+      csvNumber(row.value),
+      row.reason ?? '',
+    ])
+    downloadCsv('write-off-report.csv', headers, dataRows)
   }
 
   const columns: ColumnDef<StockWriteOffRow, unknown>[] = [

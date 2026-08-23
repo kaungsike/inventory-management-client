@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { formatCurrency, formatDateTime } from '@/lib/utils'
+import { downloadCsv, csvDateTime, csvNumber } from '@/lib/csv'
 import { STATUS_LABELS, toLabelItems } from '@/lib/labels'
 import type { InventoryTransaction } from '@/lib/types'
 
@@ -34,25 +35,18 @@ export default function TransactionsPage() {
   const exportCSV = () => {
     const rows = data?.data ?? []
     const headers = ['Date', 'Reference', 'Product', 'SKU', 'Warehouse', 'Type', 'Quantity', 'Unit Cost', 'Notes']
-    const csvRows = [
-      headers.join(','),
-      ...rows.map(tx => [
-        formatDateTime(tx.transaction_date),
-        tx.reference_number ?? '',
-        tx.product_name ?? '',
-        tx.product_sku ?? '',
-        tx.warehouse?.name ?? '',
-        tx.type,
-        tx.quantity,
-        tx.unit_cost ?? '',
-        (tx.notes ?? '').replace(/,/g, ';'),
-      ].join(',')),
-    ]
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url; a.download = 'transactions.csv'; a.click()
-    URL.revokeObjectURL(url)
+    const dataRows = rows.map(tx => [
+      csvDateTime(tx.transaction_date),
+      tx.reference_number ?? '',
+      tx.product_name ?? '',
+      tx.product_sku ?? '',
+      tx.warehouse?.name ?? '',
+      tx.type,
+      csvNumber(tx.quantity),
+      csvNumber(tx.unit_cost),
+      tx.notes ?? '',
+    ])
+    downloadCsv('transactions.csv', headers, dataRows)
   }
 
   const columns: ColumnDef<InventoryTransaction, unknown>[] = [

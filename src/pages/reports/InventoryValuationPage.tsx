@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { ProductCombobox } from '@/components/forms/ProductCombobox'
 import { formatCurrency } from '@/lib/utils'
+import { downloadCsv, csvNumber } from '@/lib/csv'
 import { toLabelItems } from '@/lib/labels'
 import type { InventoryValuationRow } from '@/lib/types'
 
@@ -36,22 +37,15 @@ export default function InventoryValuationPage() {
 
   const exportCSV = () => {
     const headers = ['Product', 'SKU', 'Warehouse', 'Quantity', 'Average Cost', 'Inventory Value']
-    const csvRows = [
-      headers.join(','),
-      ...rows.map((row) => [
-        (row.product_name ?? '').replace(/,/g, ';'),
-        row.product_sku,
-        row.warehouse_name ?? '',
-        row.quantity,
-        row.average_cost,
-        row.inventory_value,
-      ].join(',')),
-    ]
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url; a.download = 'inventory-valuation.csv'; a.click()
-    URL.revokeObjectURL(url)
+    const dataRows = rows.map((row) => [
+      row.product_name ?? '',
+      row.product_sku,
+      row.warehouse_name ?? '',
+      csvNumber(row.quantity),
+      csvNumber(row.average_cost),
+      csvNumber(row.inventory_value),
+    ])
+    downloadCsv('inventory-valuation.csv', headers, dataRows)
   }
 
   const columns: ColumnDef<InventoryValuationRow, unknown>[] = [

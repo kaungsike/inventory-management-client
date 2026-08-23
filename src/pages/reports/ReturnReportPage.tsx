@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { ReportDateRangeFilter } from '@/components/reports/ReportDateRangeFilter'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { downloadCsv, csvDate, csvNumber } from '@/lib/csv'
 import { toLabelItems } from '@/lib/labels'
 import type { ReturnReportRow } from '@/lib/types'
 
@@ -36,28 +37,21 @@ export default function ReturnReportPage() {
 
   const exportCSV = () => {
     const headers = ['Return #', 'Date', 'Customer', 'Warehouse', 'SO #', 'Product', 'SKU', 'Quantity', 'Unit Price', 'Unit Cost', 'Value', 'Reason']
-    const csvRows = [
-      headers.join(','),
-      ...rows.map((row) => [
-        row.return_number,
-        formatDate(row.return_date),
-        (row.customer_name ?? '').replace(/,/g, ';'),
-        row.warehouse_name ?? '',
-        row.so_number ?? '',
-        row.product_name.replace(/,/g, ';'),
-        row.product_sku,
-        row.quantity,
-        row.unit_price,
-        row.unit_cost,
-        row.value,
-        (row.reason ?? '').replace(/,/g, ';'),
-      ].join(',')),
-    ]
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url; a.download = 'return-report.csv'; a.click()
-    URL.revokeObjectURL(url)
+    const dataRows = rows.map((row) => [
+      row.return_number,
+      csvDate(row.return_date),
+      row.customer_name ?? '',
+      row.warehouse_name ?? '',
+      row.so_number ?? '',
+      row.product_name,
+      row.product_sku,
+      csvNumber(row.quantity),
+      csvNumber(row.unit_price),
+      csvNumber(row.unit_cost),
+      csvNumber(row.value),
+      row.reason ?? '',
+    ])
+    downloadCsv('return-report.csv', headers, dataRows)
   }
 
   const columns: ColumnDef<ReturnReportRow, unknown>[] = [

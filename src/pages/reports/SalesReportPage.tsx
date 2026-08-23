@@ -13,6 +13,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { ProductCombobox } from '@/components/forms/ProductCombobox'
 import { ReportDateRangeFilter } from '@/components/reports/ReportDateRangeFilter'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { downloadCsv, csvDate, csvNumber } from '@/lib/csv'
 import { toLabelItems } from '@/lib/labels'
 import type { SalesReportRow } from '@/lib/types'
 
@@ -35,27 +36,20 @@ export default function SalesReportPage() {
 
   const exportCSV = () => {
     const headers = ['Date', 'Product', 'SKU', 'Warehouse', 'Reference', 'Quantity', 'Unit Price', 'Unit Cost', 'Revenue', 'COGS', 'Gross Profit']
-    const csvRows = [
-      headers.join(','),
-      ...rows.map((row) => [
-        formatDate(row.transaction_date),
-        (row.product_name ?? '').replace(/,/g, ';'),
-        row.product_sku ?? '',
-        row.warehouse_name ?? '',
-        row.reference_number ?? '',
-        row.quantity,
-        row.unit_price,
-        row.unit_cost,
-        row.revenue,
-        row.cogs,
-        row.gross_profit,
-      ].join(',')),
-    ]
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url; a.download = 'sales-report.csv'; a.click()
-    URL.revokeObjectURL(url)
+    const dataRows = rows.map((row) => [
+      csvDate(row.transaction_date),
+      row.product_name ?? '',
+      row.product_sku ?? '',
+      row.warehouse_name ?? '',
+      row.reference_number ?? '',
+      csvNumber(row.quantity),
+      csvNumber(row.unit_price),
+      csvNumber(row.unit_cost),
+      csvNumber(row.revenue),
+      csvNumber(row.cogs),
+      csvNumber(row.gross_profit),
+    ])
+    downloadCsv('sales-report.csv', headers, dataRows)
   }
 
   const columns: ColumnDef<SalesReportRow, unknown>[] = [
