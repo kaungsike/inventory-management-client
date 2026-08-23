@@ -127,7 +127,7 @@ describe('buildCsv', () => {
       ['2026-08-23 07:00 AM', 'PO-2026-000010', 'Product, Large', 'PRD002', 'Warehouse 2', 'Purchase', '20', '30.5', 'Note with "quotes"'],
       ['2026-08-24 09:15 AM', 'TR-2026-000005', 'Myanmar product', 'MMR001', '', 'Transfer', '-5', '100', ''],
     ]
-    const csv = buildCsv(headers, rows)
+    // const csv = buildCsv(headers, rows)
     const headerColCount = headers.length
     expect(headerColCount).toBe(9)
 
@@ -180,7 +180,7 @@ describe('Transactions export regression', () => {
       ['2026-08-25 14:00 PM', 'ADJ-2026-000003', 'Date, with comma', 'DWC001', 'Warehouse A', 'Adjustment', '0', '0', ''],
     ]
 
-    const csv = buildCsv(headers, rows)
+    // const csv = buildCsv(headers, rows)
 
     // Header has 9 columns
     const headerCols = headers.length

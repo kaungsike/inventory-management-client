@@ -33,10 +33,10 @@ function pad(n: number): string {
   return String(n).padStart(2, '0')
 }
 
-const MONTHS = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-]
+// const MONTHS = [
+//   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+//   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+// ]
 
 /** Format a date-only value for CSV: "2026-08-23". */
 export function csvDate(date: string | null | undefined): string {
