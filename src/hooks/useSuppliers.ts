@@ -25,6 +25,16 @@ export function useAllSuppliers() {
   })
 }
 
+export function useTrashedSuppliers(filters: SupplierFilters = {}) {
+  return useQuery<PaginatedResponse<Supplier>>({
+    queryKey: ['suppliers', 'trashed', filters],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/suppliers/trashed', { params: filters })
+      return data
+    },
+  })
+}
+
 export function useSupplierMutation() {
   const queryClient = useQueryClient()
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['suppliers'] })
@@ -45,5 +55,10 @@ export function useSupplierMutation() {
     onSuccess: () => { toast.success('Supplier deleted'); invalidate() },
   })
 
-  return { create, update, remove }
+  const restore = useMutation({
+    mutationFn: (id: number) => inventoryApi.post(`/suppliers/${id}/restore`),
+    onSuccess: () => { toast.success('Supplier restored'); invalidate() },
+  })
+
+  return { create, update, remove, restore }
 }

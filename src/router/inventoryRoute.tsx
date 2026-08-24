@@ -6,8 +6,11 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
 const ProductsPage = lazy(() => import('@/pages/ProductsPage'))
 const ProductFormPage = lazy(() => import('@/pages/ProductFormPage'))
+const ProductsTrashPage = lazy(() => import('@/pages/ProductsTrashPage'))
 const CategoriesPage = lazy(() => import('@/pages/CategoriesPage'))
+const CategoriesTrashPage = lazy(() => import('@/pages/CategoriesTrashPage'))
 const SuppliersPage = lazy(() => import('@/pages/SuppliersPage'))
+const SuppliersTrashPage = lazy(() => import('@/pages/SuppliersTrashPage'))
 const WarehousesPage = lazy(() => import('@/pages/WarehousesPage'))
 const WarehouseDetailPage = lazy(() => import('@/pages/WarehouseDetailPage'))
 const InventoryPage = lazy(() => import('@/pages/InventoryPage'))
@@ -16,10 +19,13 @@ const TransactionsPage = lazy(() => import('@/pages/TransactionsPage'))
 const PurchaseOrdersPage = lazy(() => import('@/pages/PurchaseOrdersPage'))
 const PurchaseOrderFormPage = lazy(() => import('@/pages/PurchaseOrderFormPage'))
 const PurchaseOrderDetailPage = lazy(() => import('@/pages/PurchaseOrderDetailPage'))
+const PurchaseOrdersTrashPage = lazy(() => import('@/pages/PurchaseOrdersTrashPage'))
 const CustomersPage = lazy(() => import('@/pages/CustomersPage'))
+const CustomersTrashPage = lazy(() => import('@/pages/CustomersTrashPage'))
 const SalesOrdersPage = lazy(() => import('@/pages/SalesOrdersPage'))
 const SalesOrderFormPage = lazy(() => import('@/pages/SalesOrderFormPage'))
 const SalesOrderDetailPage = lazy(() => import('@/pages/SalesOrderDetailPage'))
+const SalesOrdersTrashPage = lazy(() => import('@/pages/SalesOrdersTrashPage'))
 const CustomerReturnsPage = lazy(() => import('@/pages/CustomerReturnsPage'))
 const CustomerReturnFormPage = lazy(() => import('@/pages/CustomerReturnFormPage'))
 const CustomerReturnDetailPage = lazy(() => import('@/pages/CustomerReturnDetailPage'))
@@ -33,6 +39,7 @@ const ReturnReportPage = lazy(() => import('@/pages/reports/ReturnReportPage'))
 const FinancialOverviewPage = lazy(() => import('@/pages/reports/FinancialOverviewPage'))
 const UsersPage = lazy(() => import('@/pages/users/UsersPage'))
 const UserFormPage = lazy(() => import('@/pages/users/UserFormPage'))
+const UsersTrashPage = lazy(() => import('@/pages/users/UsersTrashPage'))
 
 const Fallback = () => <LoadingSpinner className="min-h-[400px]" />
 
@@ -57,6 +64,7 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><ProductsPage /></Suspense> },
+      { path: 'trash', element: <Suspense fallback={<Fallback />}><ProductsTrashPage /></Suspense> },
       {
         path: 'new',
         element: (
@@ -84,6 +92,7 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><CategoriesPage /></Suspense> },
+      { path: 'trash', element: <Suspense fallback={<Fallback />}><CategoriesTrashPage /></Suspense> },
     ],
   },
   {
@@ -95,6 +104,7 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><SuppliersPage /></Suspense> },
+      { path: 'trash', element: <Suspense fallback={<Fallback />}><SuppliersTrashPage /></Suspense> },
     ],
   },
   {
@@ -141,6 +151,7 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><PurchaseOrdersPage /></Suspense> },
+      { path: 'trash', element: <Suspense fallback={<Fallback />}><PurchaseOrdersTrashPage /></Suspense> },
       {
         path: 'new',
         element: (
@@ -161,6 +172,7 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><CustomersPage /></Suspense> },
+      { path: 'trash', element: <Suspense fallback={<Fallback />}><CustomersTrashPage /></Suspense> },
     ],
   },
   {
@@ -172,6 +184,7 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><SalesOrdersPage /></Suspense> },
+      { path: 'trash', element: <Suspense fallback={<Fallback />}><SalesOrdersTrashPage /></Suspense> },
       {
         path: 'new',
         element: (
@@ -294,6 +307,7 @@ const inventoryRoute = [
     ),
     children: [
       { index: true, element: <Suspense fallback={<Fallback />}><UsersPage /></Suspense> },
+      { path: 'trash', element: <Suspense fallback={<Fallback />}><UsersTrashPage /></Suspense> },
       {
         path: 'new',
         element: (

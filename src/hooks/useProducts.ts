@@ -26,6 +26,16 @@ export function useProduct(id: number | null) {
   })
 }
 
+export function useTrashedProducts(filters: ProductFilters = {}) {
+  return useQuery<PaginatedResponse<Product>>({
+    queryKey: ['products', 'trashed', filters],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/products/trashed', { params: filters })
+      return data
+    },
+  })
+}
+
 export function useProductMutation() {
   const queryClient = useQueryClient()
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['products'] })
@@ -46,5 +56,10 @@ export function useProductMutation() {
     onSuccess: () => { toast.success('Product deleted'); invalidate() },
   })
 
-  return { create, update, remove }
+  const restore = useMutation({
+    mutationFn: (id: number) => inventoryApi.post(`/products/${id}/restore`),
+    onSuccess: () => { toast.success('Product restored'); invalidate() },
+  })
+
+  return { create, update, remove, restore }
 }

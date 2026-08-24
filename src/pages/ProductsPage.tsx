@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Plus, Edit2, Trash2, Package } from 'lucide-react'
+import { Plus, Edit2, Trash2, Package, Trash } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useProducts, useProductMutation } from '@/hooks/useProducts'
 import { useAllCategories } from '@/hooks/useCategories'
@@ -113,11 +113,20 @@ export default function ProductsPage() {
         title="Products"
         description="Manage your product catalog"
         action={
-          <RoleGuard roles={['admin', 'manager']}>
-            <Link to="/products/new">
-              <Button><Plus className="size-4 mr-2" />Add Product</Button>
-            </Link>
-          </RoleGuard>
+          <div className="flex gap-2">
+            <RoleGuard roles={['admin', 'manager']}>
+              <Link to="/products/trash">
+                <Button variant="outline">
+                  <Trash className="size-4 mr-2" />Deleted
+                </Button>
+              </Link>
+            </RoleGuard>
+            <RoleGuard roles={['admin', 'manager']}>
+              <Link to="/products/new">
+                <Button><Plus className="size-4 mr-2" />Add Product</Button>
+              </Link>
+            </RoleGuard>
+          </div>
         }
       />
 
@@ -180,7 +189,7 @@ export default function ProductsPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={async () => { if (deleteTarget) await remove.mutateAsync(deleteTarget.id) }}
         title="Delete Product"
-        description={`Archive "${deleteTarget?.name}"? Archived products are hidden from lists and can be restored.`}
+        description={`This item will be moved to Deleted Items. Historical records will be preserved and the item can be restored later.`}
         confirmLabel="Delete"
       />
     </div>

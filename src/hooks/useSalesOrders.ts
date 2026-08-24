@@ -38,6 +38,16 @@ export function useReturnableSalesOrder(id: number | null) {
   })
 }
 
+export function useTrashedSalesOrders(filters: SOFilters = {}) {
+  return useQuery<PaginatedResponse<SalesOrder>>({
+    queryKey: ['sales-orders', 'trashed', filters],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/sales-orders/trashed', { params: filters })
+      return data
+    },
+  })
+}
+
 export function useSalesOrderMutation() {
   const queryClient = useQueryClient()
   const invalidate = () => {
@@ -62,6 +72,11 @@ export function useSalesOrderMutation() {
     onSuccess: () => { toast.success('Sales order deleted'); invalidate() },
   })
 
+  const restore = useMutation({
+    mutationFn: (id: number) => inventoryApi.post(`/sales-orders/${id}/restore`),
+    onSuccess: () => { toast.success('Sales order restored'); invalidate() },
+  })
+
   const confirm = useMutation({
     mutationFn: (id: number) => inventoryApi.post(`/sales-orders/${id}/confirm`),
     onSuccess: () => { toast.success('Sales order confirmed'); invalidate() },
@@ -80,5 +95,5 @@ export function useSalesOrderMutation() {
     onSuccess: () => { toast.success('Sales order cancelled'); invalidate() },
   })
 
-  return { create, update, remove, confirm, ship, cancel }
+  return { create, update, remove, restore, confirm, ship, cancel }
 }

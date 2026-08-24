@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Plus, Eye, Trash2, ShoppingCart } from 'lucide-react'
+import { Plus, Eye, Trash2, ShoppingCart, Trash } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { usePurchaseOrders, usePurchaseOrderMutation } from '@/hooks/usePurchaseOrders'
 import { useAllSuppliers } from '@/hooks/useSuppliers'
@@ -63,9 +63,18 @@ export default function PurchaseOrdersPage() {
     <div className="space-y-6">
       <PageHeader title="Purchase Orders" description="Manage supplier purchase orders"
         action={
-          <RoleGuard roles={['admin', 'manager']}>
-            <Link to="/purchase-orders/new"><Button><Plus className="size-4 mr-2" />New PO</Button></Link>
-          </RoleGuard>
+          <div className="flex gap-2">
+            <RoleGuard roles={['admin', 'manager']}>
+              <Link to="/purchase-orders/trash">
+                <Button variant="outline">
+                  <Trash className="size-4 mr-2" />Deleted
+                </Button>
+              </Link>
+            </RoleGuard>
+            <RoleGuard roles={['admin', 'manager']}>
+              <Link to="/purchase-orders/new"><Button><Plus className="size-4 mr-2" />New PO</Button></Link>
+            </RoleGuard>
+          </div>
         }
       />
 
@@ -101,7 +110,7 @@ export default function PurchaseOrdersPage() {
 
       <ConfirmDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)}
         onConfirm={async () => { if (deleteTarget) await remove.mutateAsync(deleteTarget.id) }}
-        title="Delete Purchase Order" description={`Delete PO "${deleteTarget?.po_number}"?`} confirmLabel="Delete" />
+        title="Delete Purchase Order" description={`This item will be moved to Deleted Items. Historical records will be preserved and the item can be restored later.`} confirmLabel="Delete" />
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Plus, Edit2, Trash2, Users } from 'lucide-react'
+import { Plus, Edit2, Trash2, Users, Trash } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useSuppliers, useSupplierMutation } from '@/hooks/useSuppliers'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -172,12 +173,21 @@ export default function SuppliersPage() {
         title="Suppliers"
         description="Manage your suppliers"
         action={
-          <RoleGuard roles={['admin', 'manager']}>
-            <Button onClick={() => setShowCreate(true)}>
-              <Plus className="size-4 mr-2" />
-              Add Supplier
-            </Button>
-          </RoleGuard>
+          <div className="flex gap-2">
+            <RoleGuard roles={['admin', 'manager']}>
+              <Link to="/suppliers/trash">
+                <Button variant="outline">
+                  <Trash className="size-4 mr-2" />Deleted
+                </Button>
+              </Link>
+            </RoleGuard>
+            <RoleGuard roles={['admin', 'manager']}>
+              <Button onClick={() => setShowCreate(true)}>
+                <Plus className="size-4 mr-2" />
+                Add Supplier
+              </Button>
+            </RoleGuard>
+          </div>
         }
       />
 
@@ -251,7 +261,7 @@ export default function SuppliersPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={async () => { if (deleteTarget) await remove.mutateAsync(deleteTarget.id) }}
         title="Delete Supplier"
-        description={`Delete "${deleteTarget?.name}"?`}
+        description={`This item will be moved to Deleted Items. Historical records will be preserved and the item can be restored later.`}
         confirmLabel="Delete"
       />
     </div>

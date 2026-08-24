@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Plus, Edit2, Trash2, Tag } from 'lucide-react'
+import { Plus, Edit2, Trash2, Tag, Trash } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useCategories, useCategoryMutation } from '@/hooks/useCategories'
 import { PageHeader } from '@/components/common/PageHeader'
 import { StatusBadge } from '@/components/common/StatusBadge'
@@ -108,12 +109,21 @@ export default function CategoriesPage() {
         title="Categories"
         description="Manage product categories"
         action={
-          <RoleGuard roles={['admin', 'manager']}>
-            <Button onClick={() => setShowCreateForm(true)}>
-              <Plus className="size-4 mr-2" />
-              Add Category
-            </Button>
-          </RoleGuard>
+          <div className="flex gap-2">
+            <RoleGuard roles={['admin', 'manager']}>
+              <Link to="/categories/trash">
+                <Button variant="outline">
+                  <Trash className="size-4 mr-2" />Deleted
+                </Button>
+              </Link>
+            </RoleGuard>
+            <RoleGuard roles={['admin', 'manager']}>
+              <Button onClick={() => setShowCreateForm(true)}>
+                <Plus className="size-4 mr-2" />
+                Add Category
+              </Button>
+            </RoleGuard>
+          </div>
         }
       />
 
@@ -235,7 +245,7 @@ export default function CategoriesPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
         title="Delete Category"
-        description={`Are you sure you want to delete "${deleteTarget?.name}"? This will archive the category.`}
+        description={`This item will be moved to Deleted Items. Historical records will be preserved and the item can be restored later.`}
         confirmLabel="Delete"
       />
     </div>

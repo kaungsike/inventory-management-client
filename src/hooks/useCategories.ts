@@ -30,6 +30,16 @@ export function useAllCategories() {
   })
 }
 
+export function useTrashedCategories(filters: CategoryFilters = {}) {
+  return useQuery<PaginatedResponse<Category>>({
+    queryKey: ['categories', 'trashed', filters],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/categories/trashed', { params: filters })
+      return data
+    },
+  })
+}
+
 export function useCategoryMutation() {
   const queryClient = useQueryClient()
 
@@ -51,10 +61,15 @@ export function useCategoryMutation() {
     onSuccess: () => { toast.success('Category deleted'); invalidate() },
   })
 
+  const restore = useMutation({
+    mutationFn: (id: number) => inventoryApi.post(`/categories/${id}/restore`),
+    onSuccess: () => { toast.success('Category restored'); invalidate() },
+  })
+
   const toggleStatus = useMutation({
     mutationFn: (id: number) => inventoryApi.patch(`/categories/${id}/toggle-status`),
     onSuccess: () => { toast.success('Category status updated'); invalidate() },
   })
 
-  return { create, update, remove, toggleStatus }
+  return { create, update, remove, restore, toggleStatus }
 }

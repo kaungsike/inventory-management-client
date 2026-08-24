@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Edit2, Plus, Search, Trash2, UserCheck, UserX } from 'lucide-react'
+import { Edit2, Plus, Search, Trash2, UserCheck, UserX, Trash } from 'lucide-react'
 import { PageHeader } from '@/components/common/PageHeader'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
@@ -67,12 +67,19 @@ export default function UsersPage() {
         title="User Management"
         description="Manage system users, roles, and access permissions"
         action={
-          <Link to="/users/new">
-            <Button className="flex items-center gap-2">
-              <Plus className="size-4" />
-              Add User
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+            <Link to="/users/trash">
+              <Button variant="outline">
+                <Trash className="size-4 mr-2" />Deleted
+              </Button>
+            </Link>
+            <Link to="/users/new">
+              <Button className="flex items-center gap-2">
+                <Plus className="size-4" />
+                Add User
+              </Button>
+            </Link>
+          </div>
         }
       />
 
@@ -232,7 +239,7 @@ export default function UsersPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={async () => { if (deleteTarget) await deleteUser.mutateAsync(deleteTarget.id) }}
         title="Delete User"
-        description={`Delete user "${deleteTarget?.name}"? This cannot be undone.`}
+        description={`This item will be moved to Deleted Items. Historical records will be preserved and the item can be restored later.`}
         confirmLabel="Delete"
       />
     </div>

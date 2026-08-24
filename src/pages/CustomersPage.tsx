@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Plus, Edit2, Trash2, UserRound } from 'lucide-react'
+import { Plus, Edit2, Trash2, UserRound, Trash } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useCustomers, useCustomerMutation } from '@/hooks/useCustomers'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -150,12 +151,21 @@ export default function CustomersPage() {
         title="Customers"
         description="Manage your customers"
         action={
-          <RoleGuard roles={['admin', 'manager']}>
-            <Button onClick={() => setShowCreate(true)}>
-              <Plus className="size-4 mr-2" />
-              Add Customer
-            </Button>
-          </RoleGuard>
+          <div className="flex gap-2">
+            <RoleGuard roles={['admin', 'manager']}>
+              <Link to="/customers/trash">
+                <Button variant="outline">
+                  <Trash className="size-4 mr-2" />Deleted
+                </Button>
+              </Link>
+            </RoleGuard>
+            <RoleGuard roles={['admin', 'manager']}>
+              <Button onClick={() => setShowCreate(true)}>
+                <Plus className="size-4 mr-2" />
+                Add Customer
+              </Button>
+            </RoleGuard>
+          </div>
         }
       />
 
@@ -227,7 +237,7 @@ export default function CustomersPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={async () => { if (deleteTarget) await remove.mutateAsync(deleteTarget.id) }}
         title="Delete Customer"
-        description={`Delete "${deleteTarget?.name}"? Customers with sales history cannot be deleted.`}
+        description={`This item will be moved to Deleted Items. Historical records will be preserved and the item can be restored later.`}
         confirmLabel="Delete"
       />
     </div>

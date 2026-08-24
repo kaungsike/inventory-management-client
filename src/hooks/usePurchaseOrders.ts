@@ -26,6 +26,16 @@ export function usePurchaseOrder(id: number | null) {
   })
 }
 
+export function useTrashedPurchaseOrders(filters: POFilters = {}) {
+  return useQuery<PaginatedResponse<PurchaseOrder>>({
+    queryKey: ['purchase-orders', 'trashed', filters],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/purchase-orders/trashed', { params: filters })
+      return data
+    },
+  })
+}
+
 export function usePurchaseOrderMutation() {
   const queryClient = useQueryClient()
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['purchase-orders'] })
@@ -46,6 +56,11 @@ export function usePurchaseOrderMutation() {
     onSuccess: () => { toast.success('Purchase order deleted'); invalidate() },
   })
 
+  const restore = useMutation({
+    mutationFn: (id: number) => inventoryApi.post(`/purchase-orders/${id}/restore`),
+    onSuccess: () => { toast.success('Purchase order restored'); invalidate() },
+  })
+
   const receive = useMutation({
     mutationFn: ({ id, warehouse_id, items }: { id: number; warehouse_id?: number; items: { id: number; quantity_received: number }[] }) =>
       inventoryApi.post(`/purchase-orders/${id}/receive`, { warehouse_id, items }),
@@ -62,5 +77,5 @@ export function usePurchaseOrderMutation() {
     onSuccess: () => { toast.success('Status updated'); invalidate() },
   })
 
-  return { create, update, remove, receive, updateStatus }
+  return { create, update, remove, restore, receive, updateStatus }
 }

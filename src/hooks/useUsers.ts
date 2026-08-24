@@ -53,6 +53,18 @@ export const useUser = (id?: number | string) => {
   })
 }
 
+export const useTrashedUsers = (filters: UserFilters = {}) => {
+  const { enabled = true, ...queryFilters } = filters
+  return useQuery<UsersResponse>({
+    queryKey: ['users', 'trashed', queryFilters],
+    queryFn: async () => {
+      const response = await inventoryApi.get('/users/trashed', { params: queryFilters })
+      return response.data
+    },
+    enabled,
+  })
+}
+
 export const useUserMutation = () => {
   const queryClient = useQueryClient()
 
@@ -86,6 +98,16 @@ export const useUserMutation = () => {
     },
   })
 
+  const restoreUser = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await inventoryApi.post(`/users/${id}/restore`)
+      return response.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+    },
+  })
+
   const toggleStatus = useMutation({
     mutationFn: async (id: number) => {
       const response = await inventoryApi.patch(`/users/${id}/toggle-status`)
@@ -100,6 +122,7 @@ export const useUserMutation = () => {
     createUser,
     updateUser,
     deleteUser,
+    restoreUser,
     toggleStatus,
   }
 }

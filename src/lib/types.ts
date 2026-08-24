@@ -6,6 +6,7 @@ export interface Category {
   products_count?: number
   created_at: string
   updated_at: string
+  deleted_at?: string
 }
 
 export interface Supplier {
@@ -19,6 +20,7 @@ export interface Supplier {
   status: 'active' | 'inactive'
   created_at: string
   updated_at: string
+  deleted_at?: string
 }
 
 export interface Product {
@@ -38,6 +40,7 @@ export interface Product {
   total_stock?: number
   created_at: string
   updated_at: string
+  deleted_at?: string
 }
 
 export interface Warehouse {
@@ -55,6 +58,7 @@ export interface Warehouse {
   total_stock?: number
   created_at: string
   updated_at: string
+  deleted_at?: string
 }
 
 export interface WarehouseDetail extends Warehouse {
@@ -134,6 +138,7 @@ export interface Customer {
   status: 'active' | 'inactive'
   created_at: string
   updated_at: string
+  deleted_at?: string
 }
 
 export interface SalesOrderItem {
@@ -165,6 +170,7 @@ export interface SalesOrder {
   items_count?: number
   created_at: string
   updated_at: string
+  deleted_at?: string
 }
 
 export interface PurchaseOrder {
@@ -187,6 +193,7 @@ export interface PurchaseOrder {
   items_count?: number
   created_at: string
   updated_at: string
+  deleted_at?: string
 }
 
 export interface DashboardStats {

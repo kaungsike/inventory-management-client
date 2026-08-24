@@ -25,6 +25,16 @@ export function useAllCustomers() {
   })
 }
 
+export function useTrashedCustomers(filters: CustomerFilters = {}) {
+  return useQuery<PaginatedResponse<Customer>>({
+    queryKey: ['customers', 'trashed', filters],
+    queryFn: async () => {
+      const { data } = await inventoryApi.get('/customers/trashed', { params: filters })
+      return data
+    },
+  })
+}
+
 export function useCustomerMutation() {
   const queryClient = useQueryClient()
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['customers'] })
@@ -45,5 +55,10 @@ export function useCustomerMutation() {
     onSuccess: () => { toast.success('Customer deleted'); invalidate() },
   })
 
-  return { create, update, remove }
+  const restore = useMutation({
+    mutationFn: (id: number) => inventoryApi.post(`/customers/${id}/restore`),
+    onSuccess: () => { toast.success('Customer restored'); invalidate() },
+  })
+
+  return { create, update, remove, restore }
 }
