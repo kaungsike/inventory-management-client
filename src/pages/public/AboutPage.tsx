@@ -70,8 +70,8 @@ export default function AboutPage() {
               A complete inventory management system
             </h1>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              Inventory MS manages the full lifecycle of physical stock for a multi-warehouse business — purchasing,
-              receiving, selling, returning, transferring, and reporting — with an auditable transaction ledger
+              Inventory MS manages the full lifecycle of physical stock for a multi-warehouse business purchasing,
+              receiving, selling, returning, transferring, and reporting with an auditable transaction ledger
               underneath everything.
             </p>
           </div>

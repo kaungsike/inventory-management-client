@@ -185,9 +185,6 @@ export default function HomePage() {
                     <p className="mt-1 text-xs leading-5 text-muted-foreground">{step.text}</p>
                   </div>
                 </div>
-                {index < HOW_IT_WORKS.length - 1 && (
-                  <ArrowRightIcon className="hidden size-5 shrink-0 text-muted-foreground lg:block" />
-                )}
               </div>
             ))}
           </div>
