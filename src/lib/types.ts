@@ -35,6 +35,7 @@ export interface Product {
   average_cost: number
   unit: string
   status: 'active' | 'inactive' | 'discontinued'
+  reorder_point: number
   category?: Category
   supplier?: Supplier
   total_stock?: number

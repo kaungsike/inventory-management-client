@@ -22,6 +22,7 @@ interface ProductFormData {
   category_id: string; supplier_id: string
   unit_price: string; cost_price: string; unit: string
   status: string
+  reorder_point: string
 }
 
 export default function ProductFormPage() {
@@ -37,7 +38,7 @@ export default function ProductFormPage() {
     defaultValues: {
       name: '', sku: '', description: '', category_id: '',
       supplier_id: '', unit_price: '', cost_price: '',
-      unit: 'pcs', status: 'active',
+      unit: 'pcs', status: 'active', reorder_point: '0',
     },
   })
 
@@ -53,6 +54,7 @@ export default function ProductFormPage() {
         cost_price: String(product.cost_price),
         unit: product.unit,
         status: product.status,
+        reorder_point: String(product.reorder_point ?? 0),
       })
     }
   }, [product, isEdit, reset])
@@ -64,6 +66,7 @@ export default function ProductFormPage() {
       supplier_id: data.supplier_id ? Number(data.supplier_id) : null,
       unit_price: parseFloat(data.unit_price),
       cost_price: parseFloat(data.cost_price),
+      reorder_point: parseInt(data.reorder_point || '0', 10),
       status: data.status as 'active' | 'inactive' | 'discontinued',
     }
     if (isEdit && productId) {
@@ -160,6 +163,22 @@ export default function ProductFormPage() {
                 className="mt-1"
               />
               {errors.cost_price && <p className="text-xs text-destructive mt-1">{errors.cost_price.message}</p>}
+            </div>
+
+            <div>
+              <Label>Reorder Point</Label>
+              <Input
+                type="number"
+                step="1"
+                min="0"
+                {...register('reorder_point', { min: { value: 0, message: 'Must be >= 0' } })}
+                className="mt-1"
+                placeholder="0"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Stock level at which this product is considered low stock.
+              </p>
+              {errors.reorder_point && <p className="text-xs text-destructive mt-1">{errors.reorder_point.message}</p>}
             </div>
 
             <div>

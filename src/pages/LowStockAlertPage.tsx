@@ -30,7 +30,8 @@ export default function LowStockAlertPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {lowStockItems.map((item) => {
-            const status = calculateStockStatus(item.quantity, item.reorder_point)
+            const reorderPoint = item.product?.reorder_point ?? item.reorder_point
+            const status = calculateStockStatus(item.quantity, reorderPoint)
             const isCritical = status === 'critical'
 
             return (
@@ -62,7 +63,7 @@ export default function LowStockAlertPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Reorder Point</span>
-                    <span>{item.reorder_point}</span>
+                    <span>{reorderPoint}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Suggested Qty</span>
