@@ -52,6 +52,21 @@ export const REPORT_PRESETS: { value: ReportPreset; label: string }[] = [
   { value: 'last-30-days', label: 'Last 30 Days' },
 ]
 
+export const MYANMAR_PHONE_REGEX = /^09(?:\d{7}|\d{9})$/
+
+export function isValidMyanmarPhone(phone: string): boolean {
+  return MYANMAR_PHONE_REGEX.test(phone)
+}
+
+export function sanitizePhoneInput(value: string): string {
+  return value.replace(/\D/g, '').slice(0, 11)
+}
+
+export function formatPhoneForDisplay(phone: string | null | undefined): string {
+  if (!phone) return '—'
+  return phone
+}
+
 export function reportPresetRange(preset: ReportPreset): { dateFrom: string; dateTo: string } {
   const now = new Date()
   const toDateString = (d: Date) => {

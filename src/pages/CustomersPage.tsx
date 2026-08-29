@@ -20,6 +20,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { RoleGuard } from '@/components/auth/RoleGuard'
 import { useAuth } from '@/hooks/useAuth'
 import { STATUS_LABELS } from '@/lib/labels'
+import { MYANMAR_PHONE_REGEX, sanitizePhoneInput } from '@/lib/utils'
 import type { Customer } from '@/lib/types'
 
 interface CustomerFormData {
@@ -65,7 +66,19 @@ function CustomerForm({ defaultValues, onSubmit, onCancel, loading, isEdit }: {
       </div>
       <div>
         <Label>Phone</Label>
-        <Input {...register('phone')} className="mt-1" />
+        <Input
+          {...register('phone', {
+            pattern: {
+              value: MYANMAR_PHONE_REGEX,
+              message: 'Phone must start with 09 and contain exactly 9 or 11 digits',
+            },
+            onChange: (e) => e.target.value = sanitizePhoneInput(e.target.value),
+          })}
+          className="mt-1"
+          maxLength={11}
+          placeholder="09xxxxxxxxx"
+        />
+        {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone.message}</p>}
       </div>
       <div>
         <Label>Status</Label>
