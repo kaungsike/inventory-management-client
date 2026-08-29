@@ -48,10 +48,8 @@ export interface Warehouse {
   name: string
   location: string
   description: string | null
-  manager_name: string | null
   manager_id: number | null
   manager?: { id: number; name: string; email: string } | null
-  phone: string | null
   status: 'active' | 'inactive'
   archived_at: string | null
   inventory_count?: number

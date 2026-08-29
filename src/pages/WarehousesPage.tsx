@@ -32,8 +32,6 @@ interface WarehouseFormData {
   name: string
   location: string
   description: string
-  manager_name: string
-  phone: string
   status: 'active' | 'inactive'
   manager_id: string
 }
@@ -50,7 +48,7 @@ function WarehouseForm({ defaultValues, onSubmit, onCancel, loading, isEdit, can
   const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<WarehouseFormData>({
     defaultValues: {
       name: '', location: '', description: '',
-      manager_name: '', phone: '', status: 'active', manager_id: '',
+      status: 'active', manager_id: '',
       ...defaultValues,
     },
   })
@@ -86,14 +84,6 @@ function WarehouseForm({ defaultValues, onSubmit, onCancel, loading, isEdit, can
           </Select>
         </div>
       )}
-      <div>
-        <Label>Manager Name</Label>
-        <Input {...register('manager_name')} className="mt-1" />
-      </div>
-      <div>
-        <Label>Phone</Label>
-        <Input {...register('phone')} className="mt-1" />
-      </div>
       <div>
         <Label>Status</Label>
         <Select value={status} onValueChange={(v) => setValue('status', v as 'active' | 'inactive')} items={STATUS_LABELS}>
@@ -149,8 +139,6 @@ export default function WarehousesPage() {
       name: d.name,
       location: d.location,
       description: d.description,
-      manager_name: d.manager_name,
-      phone: d.phone,
       status: d.status,
     }
     if (isAdmin) payload.manager_id = d.manager_id ? Number(d.manager_id) : null
@@ -292,8 +280,6 @@ export default function WarehousesPage() {
                 name: editingWarehouse.name,
                 location: editingWarehouse.location,
                 description: editingWarehouse.description ?? '',
-                manager_name: editingWarehouse.manager_name ?? '',
-                phone: editingWarehouse.phone ?? '',
                 status: editingWarehouse.status,
                 manager_id: editingWarehouse.manager_id ? String(editingWarehouse.manager_id) : '',
               }}

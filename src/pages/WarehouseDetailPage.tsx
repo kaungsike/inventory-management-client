@@ -145,8 +145,6 @@ export default function WarehouseDetailPage() {
           name: detail.name,
           location: detail.location,
           description: detail.description ?? '',
-          manager_name: detail.manager_name ?? '',
-          phone: detail.phone ?? '',
           status: detail.status,
           manager_id: assignManagerId ? Number(assignManagerId) : null,
         },
@@ -320,8 +318,6 @@ export default function WarehouseDetailPage() {
               <CardContent className="space-y-3 text-sm">
                 <div className="flex justify-between"><span className="text-muted-foreground">Status</span><StatusBadge status={isArchived ? 'archived' : detail.status} /></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Location</span><span>{detail.location}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Phone</span><span>{detail.phone ?? '—'}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Contact Name</span><span>{detail.manager_name ?? '—'}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Created</span><span>{formatDate(detail.created_at)}</span></div>
                 {detail.description && <p className="text-muted-foreground">{detail.description}</p>}
               </CardContent>
