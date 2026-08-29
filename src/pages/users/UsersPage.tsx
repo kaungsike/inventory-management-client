@@ -153,6 +153,7 @@ export default function UsersPage() {
                 ) : (
                   users.map((u) => {
                     const isSelf = u.id === currentUser?.id
+                    const isAdmin = u.role === 'admin'
                     return (
                       <tr key={u.id} className="hover:bg-muted/30 transition-colors">
                         <td className="p-4 font-medium text-foreground">
@@ -191,7 +192,7 @@ export default function UsersPage() {
                             <Edit2 className="size-4" />
                           </Button>
 
-                          {!isSelf && (
+                          {!isSelf && !isAdmin && (
                             <>
                               <Button
                                 variant="ghost"
@@ -216,6 +217,9 @@ export default function UsersPage() {
                                 <Trash2 className="size-4" />
                               </Button>
                             </>
+                          )}
+                          {isAdmin && !isSelf && (
+                            <span className="text-xs text-muted-foreground">Protected</span>
                           )}
                         </td>
                       </tr>

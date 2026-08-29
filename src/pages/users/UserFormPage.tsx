@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Loader2, Save } from 'lucide-react'
+import { ArrowLeft, Loader2, Save, Lock } from 'lucide-react'
 import { PageHeader } from '@/components/common/PageHeader'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { Badge } from '@/components/ui/badge'
 import { useUser, useUserMutation } from '@/hooks/useUsers'
 
 interface UserFormInputs {
@@ -27,6 +28,8 @@ export default function UserFormPage() {
   const navigate = useNavigate()
   const { data: user, isLoading: isLoadingUser } = useUser(id)
   const { createUser, updateUser } = useUserMutation()
+
+  const isAdmin = isEdit && user?.role === 'admin'
 
   const {
     register,
@@ -183,21 +186,31 @@ export default function UserFormPage() {
             {/* Role */}
             <div className="space-y-2">
               <Label htmlFor="role">User Role</Label>
-              <Controller
-                name="role"
-                control={control}
-                rules={{ required: 'Role is required' }}
-                render={({ field }) => (
-                  <select
-                    id="role"
-                    className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    {...field}
-                  >
-                    <option value="manager">Manager (CRUD on catalog, approve/cancel POs)</option>
-                    <option value="admin">Admin (Full system access & user management)</option>
-                  </select>
-                )}
-              />
+              {isAdmin ? (
+                <div className="flex items-center gap-2">
+                  <Badge variant="destructive" className="text-xs">
+                    Administrator
+                  </Badge>
+                  <Lock className="size-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">(Locked - Cannot be changed)</span>
+                </div>
+              ) : (
+                <Controller
+                  name="role"
+                  control={control}
+                  rules={{ required: 'Role is required' }}
+                  render={({ field }) => (
+                    <select
+                      id="role"
+                      className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      {...field}
+                    >
+                      <option value="manager">Manager (CRUD on catalog, approve/cancel POs)</option>
+                      <option value="admin">Admin (Full system access & user management)</option>
+                    </select>
+                  )}
+                />
+              )}
               {errors.role && <p className="text-xs text-destructive">{errors.role.message}</p>}
             </div>
 
@@ -209,17 +222,27 @@ export default function UserFormPage() {
                   Inactive users will be blocked from logging in.
                 </p>
               </div>
-              <Controller
-                name="is_active"
-                control={control}
-                render={({ field }) => (
-                  <Switch
-                    id="is_active"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                )}
-              />
+              {isAdmin ? (
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 text-xs">
+                    Active
+                  </Badge>
+                  <Lock className="size-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">(Always Active)</span>
+                </div>
+              ) : (
+                <Controller
+                  name="is_active"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      id="is_active"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+              )}
             </div>
 
             {/* Submit Button */}
