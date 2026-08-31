@@ -52,6 +52,20 @@ export const REPORT_PRESETS: { value: ReportPreset; label: string }[] = [
   { value: 'last-30-days', label: 'Last 30 Days' },
 ]
 
+export const MYANMAR_TIMEZONE_OFFSET = 6.5 * 60 * 60 * 1000; // UTC+6:30 in milliseconds
+
+export function getMyanmarDate(date: Date = new Date()): Date {
+  return new Date(date.getTime() + MYANMAR_TIMEZONE_OFFSET);
+}
+
+export function myanmarDateToString(date: Date = new Date()): string {
+  const myanmarDate = getMyanmarDate(date);
+  const y = myanmarDate.getUTCFullYear();
+  const m = String(myanmarDate.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(myanmarDate.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 export const MYANMAR_PHONE_REGEX = /^09(?:\d{7}|\d{9})$/
 
 export function isValidMyanmarPhone(phone: string): boolean {
@@ -68,40 +82,39 @@ export function formatPhoneForDisplay(phone: string | null | undefined): string 
 }
 
 export function reportPresetRange(preset: ReportPreset): { dateFrom: string; dateTo: string } {
-  const now = new Date()
+  const now = getMyanmarDate();
   const toDateString = (d: Date) => {
-    const y = d.getFullYear()
-    const m = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return `${y}-${m}-${day}`
-  }
+    const y = d.getUTCFullYear();
+    const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(d.getUTCDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
 
   const shift = (days: number) => {
-    const d = new Date(now)
-    d.setDate(d.getDate() - days)
-    return toDateString(d)
-  }
+    const d = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+    return toDateString(d);
+  };
 
   switch (preset) {
     case 'yesterday':
-      return { dateFrom: shift(1), dateTo: shift(1) }
+      return { dateFrom: shift(1), dateTo: shift(1) };
     case 'this-week': {
-      const start = new Date(now)
-      const day = start.getDay() || 7 // Sunday = 7, Monday = 1
-      start.setDate(start.getDate() - (day - 1))
-      return { dateFrom: toDateString(start), dateTo: toDateString(now) }
+      const start = new Date(now);
+      const day = start.getUTCDay() || 7; // Sunday = 7, Monday = 1
+      start.setTime(start.getTime() - (day - 1) * 24 * 60 * 60 * 1000);
+      return { dateFrom: toDateString(start), dateTo: toDateString(now) };
     }
     case 'this-month':
-      return { dateFrom: toDateString(new Date(now.getFullYear(), now.getMonth(), 1)), dateTo: toDateString(now) }
+      return { dateFrom: toDateString(new Date(now.getUTCFullYear(), now.getUTCMonth(), 1)), dateTo: toDateString(now) };
     case 'last-month': {
-      const first = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-      const last = new Date(now.getFullYear(), now.getMonth(), 0)
-      return { dateFrom: toDateString(first), dateTo: toDateString(last) }
+      const first = new Date(now.getUTCFullYear(), now.getUTCMonth() - 1, 1);
+      const last = new Date(now.getUTCFullYear(), now.getUTCMonth(), 0);
+      return { dateFrom: toDateString(first), dateTo: toDateString(last) };
     }
     case 'last-30-days':
-      return { dateFrom: shift(29), dateTo: toDateString(now) }
+      return { dateFrom: shift(29), dateTo: toDateString(now) };
     case 'today':
     default:
-      return { dateFrom: toDateString(now), dateTo: toDateString(now) }
+      return { dateFrom: toDateString(now), dateTo: toDateString(now) };
   }
 }

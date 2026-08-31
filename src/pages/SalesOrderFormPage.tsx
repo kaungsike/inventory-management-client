@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, myanmarDateToString } from '@/lib/utils'
 import { toLabelItems } from '@/lib/labels'
 
 interface LineItem { product_id: string; quantity_ordered: string; unit_price: string }
@@ -35,7 +35,7 @@ export default function SalesOrderFormPage() {
 
   const { register, handleSubmit, control, watch, setValue, formState: { errors } } = useForm<SOFormData>({
     defaultValues: {
-      customer_id: '', warehouse_id: '', order_date: new Date().toISOString().split('T')[0],
+      customer_id: '', warehouse_id: '', order_date: myanmarDateToString(),
       notes: '',
       items: [{ product_id: '', quantity_ordered: '1', unit_price: '' }],
     },

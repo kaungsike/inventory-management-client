@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, myanmarDateToString } from '@/lib/utils'
 import { toLabelItems } from '@/lib/labels'
 
 interface LineItem { product_id: string; quantity_ordered: string; unit_cost: string }
@@ -34,7 +34,7 @@ export default function PurchaseOrderFormPage() {
 
   const { register, handleSubmit, control, watch, formState: { errors } } = useForm<POFormData>({
     defaultValues: {
-      supplier_id: '', warehouse_id: '1', order_date: new Date().toISOString().split('T')[0],
+      supplier_id: '', warehouse_id: '1', order_date: myanmarDateToString(),
       expected_date: '', notes: '',
       items: [{ product_id: '', quantity_ordered: '1', unit_cost: '' }],
     },

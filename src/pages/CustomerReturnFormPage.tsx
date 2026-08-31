@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, myanmarDateToString } from '@/lib/utils'
 import { toLabelItems } from '@/lib/labels'
 
 interface ReturnFormData {
@@ -37,7 +37,7 @@ export default function CustomerReturnFormPage() {
 
   const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm<ReturnFormData>({
     defaultValues: {
-      sales_order_id: '', return_date: new Date().toISOString().split('T')[0], reason: '', notes: '', items: {},
+      sales_order_id: '', return_date: myanmarDateToString(), reason: '', notes: '', items: {},
     },
   })
 
@@ -52,7 +52,7 @@ export default function CustomerReturnFormPage() {
     if (isEdit && editReturn) {
       reset({
         sales_order_id: String(editReturn.sales_order_id),
-        return_date: editReturn.return_date?.slice(0, 10) ?? new Date().toISOString().split('T')[0],
+        return_date: editReturn.return_date?.slice(0, 10) ?? myanmarDateToString(),
         reason: editReturn.reason ?? '',
         notes: editReturn.notes ?? '',
         items: {},
